@@ -3,4 +3,8 @@ project(KernelImageProcessor)
 
 set(CMAKE_CXX_STANDARD 11)
 
-add_executable(KernelImageProcessor main.cpp)
+add_executable(KernelImageProcessor main.cpp
+        Image.cpp
+        Image.h
+        Channel.cpp
+        Channel.h)
