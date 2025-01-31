@@ -7,4 +7,10 @@ add_executable(KernelImageProcessor main.cpp
         Image.cpp
         Image.h
         Channel.cpp
-        Channel.h)
+        Channel.h
+        FileHandler.cpp
+        FileHandler.h
+        PPMHandler.cpp
+        PPMHandler.h
+        PNMFileHandler.cpp
+        PNMFileHandler.h)

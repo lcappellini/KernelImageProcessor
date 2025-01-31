@@ -29,7 +29,7 @@ void Channel::set_at(int index, uint8_t value) {
 }
 
 void Channel::set_at(int x, int y, uint8_t value) {
-    buffer[y*height+x] = value;
+    set_at(y*height+x, value);
 }
 
 
