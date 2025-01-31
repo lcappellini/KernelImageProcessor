@@ -6,14 +6,14 @@
 #define KERNELIMAGEPROCESSOR_PNMFILEHANDLER_H
 
 #include <string>
-#include "Image.h"
+#include "PixelImage.h"
 
 using namespace std;
 
 class PNMFileHandler {
 public:
     static Image * load(const string& filename);
-    bool save(Image * image, string filename);
+    static bool save(Image * image, const string& filename);
 };
 
 

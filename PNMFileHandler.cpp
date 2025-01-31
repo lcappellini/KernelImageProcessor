@@ -5,7 +5,9 @@
 #include <fstream>
 #include <sstream>
 #include <vector>
+#include <iostream>
 #include "PNMFileHandler.h"
+#include "PixelImage.h"
 
 using namespace std;
 
@@ -13,9 +15,10 @@ Image * PNMFileHandler::load(const string& filename) {
     ifstream input(filename);
     int n = 0;
     int i = 0;
+    int k = 0;
     unsigned short width, height;
     unsigned short maxval; // 0 < maxval < 65536
-    vector<unsigned short> pixelData;
+    uint8_t * pixelData;
     uint8_t nChannels;
     for(string line; getline(input, line);)
     {
@@ -35,6 +38,8 @@ Image * PNMFileHandler::load(const string& filename) {
         } else if (i == 1) {
             istringstream iss(line);
             iss >> width >> height;
+            pixelData = new uint8_t[width*height*nChannels];
+            k = 0;
             i++;
         } else if (i == 2) { //TODO whitespace is also good, not only newline (add this possibility)
             if (nChannels != 1) {
@@ -45,39 +50,58 @@ Image * PNMFileHandler::load(const string& filename) {
                 maxval = val;
             }
             i++;
-        } else if (i > 3) {
+        } else if (i > 2) {
             istringstream iss(line);
             string s;
             while (getline(iss, s, ' ')) { //TODO verify it works even with multiple whitespaces
                 unsigned short val = stoi(s);
-                pixelData.push_back(val);
+                uint8_t value = (val * (uint32_t)255) / maxval; //TODO IMAGES ARE "QUANTIZED" TO A 8 BITDEPTH, SHOULD I CHANGE THIS?
+                pixelData[k++] = value;
             }
         }
         n++;
     }
 
-    if (pixelData.size() % 3 != 0){
-        return nullptr;
-    }
+    cout << "Width:" << width << endl;
+    cout << "Height:" << height << endl;
+    cout << "Maxval:" << maxval << endl;
 
-    vector<vector<uint8_t>> chs(nChannels);
-    unsigned int c = 0;
-    for (unsigned short val : pixelData){
-        uint8_t value = (val * (uint32_t)255) / maxval;
-        chs[c].push_back(value);
-        c = (c + 1) % nChannels;
+    if (nChannels == 1){
+        return new PixelImage<1>(width, height, pixelData);
+    } else if (nChannels == 2){
+        return new PixelImage<2>(width, height, pixelData);
+    } else if (nChannels == 3){
+        return new PixelImage<3>(width, height, pixelData);
+    } else if (nChannels == 4){
+        return new PixelImage<4>(width, height, pixelData);
     }
-
-    vector<Channel> channels;
-    for (int k = 0; k < nChannels; k++) {
-        channels.emplace_back(width, height, chs[k].data());
-    }
-
-    auto img = new Image(width, height, nChannels, channels.data());
-    return img;
+    return nullptr;
 }
 
-bool PNMFileHandler::save(Image * image, string filename) {
-    return false;
+bool PNMFileHandler::save(Image * image, const string& filename) {
+    ofstream outfile;
+    outfile.open(filename, ios_base::trunc);
+
+    outfile << "P" << (int)image->get_nChannels() << std::endl; //TODO check if P4 is a 4 channel image or not and if you can have 4 channels saved in this file format
+
+    outfile << "# This is a comment" << endl; //TODO remove, just for testing purpose, consider if keeping the original comments or not
+
+    outfile << image->get_width() << " " << image->get_height() << endl;
+
+    outfile << 255 << endl; //TODO images are saved with bitdepth=8, should i consider adding more options?? (i'll need to edit the pixel array to handle arbitrary precision ints)
+
+    for (int i = 0; i < image->get_width()*image->get_height(); i++){
+        uint8_t * pixel = image->get_at(i);
+        for (int n = 0; n < image->get_nChannels(); n++){
+            if (n != 0){
+                outfile << " ";
+            }
+            outfile << (int)pixel[n];
+        }
+        outfile << endl;
+    }
+    outfile << endl; //TODO CHECK IF OBLIGATORY OR NOT
+    outfile.close();
+    return true;
 }
 

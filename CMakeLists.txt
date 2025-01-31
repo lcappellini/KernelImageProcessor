@@ -4,13 +4,9 @@ project(KernelImageProcessor)
 set(CMAKE_CXX_STANDARD 11)
 
 add_executable(KernelImageProcessor main.cpp
-        Image.cpp
-        Image.h
-        Channel.cpp
-        Channel.h
-        FileHandler.cpp
-        FileHandler.h
-        PPMHandler.cpp
-        PPMHandler.h
+        PixelImage.cpp
+        PixelImage.h
         PNMFileHandler.cpp
-        PNMFileHandler.h)
+        PNMFileHandler.h
+        Image.cpp
+        Image.h)

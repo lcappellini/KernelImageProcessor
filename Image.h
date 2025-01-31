@@ -1,35 +1,26 @@
 //
-// Created by Lorenzo on 30/01/2025.
+// Created by Lorenzo on 31/01/2025.
 //
 
 #ifndef KERNELIMAGEPROCESSOR_IMAGE_H
 #define KERNELIMAGEPROCESSOR_IMAGE_H
 
-#include "Channel.h"
 
-/*template <uint8_t numChannels> class Image {
-private:
-    unsigned short width;
-    unsigned short height;
-    Channel channels[numChannels];
-public:
-    Image(unsigned short w, unsigned short h, Channel * channels);
-    unsigned short get_width();
-    unsigned short get_height();
-};*/
+#include <cstdint>
 
 class Image {
-private:
-    unsigned short width;
-    unsigned short height;
-    uint8_t nChannels;
-    Channel * channels;
+protected:
+    uint16_t width = 0;
+    uint16_t height = 0;
+    uint8_t nChannels = 0;
 public:
-    Image(unsigned short w, unsigned short h, uint8_t nChs, Channel * chs);
-    unsigned short get_width();
-    unsigned short get_height();
-    uint8_t * get_at(int index);
-    uint8_t * get_at(int x, int y);
+    uint16_t get_width() const;
+    uint16_t get_height() const;
+    virtual uint8_t * get_at(int index) const = 0;
+    virtual uint8_t * get_at(int x, int y) const = 0;
+    virtual void set_at(int index, uint8_t * values) = 0;
+    virtual void set_at(int x, int y, uint8_t * values) = 0;
+    uint8_t get_nChannels() const;
 };
 
 
