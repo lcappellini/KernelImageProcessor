@@ -9,4 +9,9 @@ add_executable(KernelImageProcessor main.cpp
         PNMFileHandler.cpp
         PNMFileHandler.h
         Image.cpp
-        Image.h)
+        Image.h
+        ImageEditor.cpp
+        ImageEditor.h
+        Kernel.cpp
+        Kernel.h
+        KernelMode.h)

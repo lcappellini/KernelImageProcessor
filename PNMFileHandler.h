@@ -11,6 +11,9 @@
 using namespace std;
 
 class PNMFileHandler {
+private:
+    static const string validExts[3];
+    static bool hasValidExtension(const string& filename);
 public:
     static Image * load(const string& filename);
     static bool save(Image * image, const string& filename);

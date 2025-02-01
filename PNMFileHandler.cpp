@@ -11,13 +11,20 @@
 
 using namespace std;
 
+
+const string PNMFileHandler::validExts[3] = {"ppm", "pgm", "pbm"};
+
 Image * PNMFileHandler::load(const string& filename) {
+    if (!hasValidExtension(filename)){
+        return nullptr;
+    }
+
     ifstream input(filename);
     int n = 0;
     int i = 0;
     int k = 0;
-    unsigned short width, height;
-    unsigned short maxval; // 0 < maxval < 65536
+    uint16_t width, height;
+    uint16_t maxval; // 0 < maxval < 65536
     uint8_t * pixelData;
     uint8_t nChannels;
     for(string line; getline(input, line);)
@@ -48,6 +55,8 @@ Image * PNMFileHandler::load(const string& filename) {
                     return nullptr;
                 }
                 maxval = val;
+            } else {
+                maxval = 1;
             }
             i++;
         } else if (i > 2) {
@@ -62,9 +71,9 @@ Image * PNMFileHandler::load(const string& filename) {
         n++;
     }
 
-    cout << "Width:" << width << endl;
+    /*cout << "Width:" << width << endl;
     cout << "Height:" << height << endl;
-    cout << "Maxval:" << maxval << endl;
+    cout << "Maxval:" << maxval << endl;*/
 
     if (nChannels == 1){
         return new PixelImage<1>(width, height, pixelData);
@@ -103,5 +112,15 @@ bool PNMFileHandler::save(Image * image, const string& filename) {
     outfile << endl; //TODO CHECK IF OBLIGATORY OR NOT
     outfile.close();
     return true;
+}
+
+bool PNMFileHandler::hasValidExtension(const string &filename) {
+    string ext = filename.substr(filename.find_last_of('.') + 1);
+    for (const auto & validExt : validExts) {
+        if (ext == validExt) {
+            return true;
+        }
+    }
+    return false;
 }
 
