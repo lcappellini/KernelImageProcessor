@@ -15,60 +15,99 @@ using namespace std;
 const string PNMFileHandler::validExts[3] = {"ppm", "pgm", "pbm"};
 
 Image * PNMFileHandler::load(const string& filename) {
-    if (!hasValidExtension(filename)){
+    if (!hasValidExtension(filename)) {
         return nullptr;
     }
 
-    ifstream input(filename);
+    ifstream file(filename, std::ios::binary);
+
     int n = 0;
-    int i = 0;
-    int k = 0;
     uint16_t width, height;
     uint16_t maxval; // 0 < maxval < 65536
-    uint8_t * pixelData;
+    uint8_t *pixelData;
     uint8_t nChannels;
-    for(string line; getline(input, line);)
-    {
-        if (line.at(0) == '#') {
-            continue;
-        } else if (n == 0) {
-            if (line == "P1") {
-                nChannels = 1;
-            } else if (line == "P2") {
-                nChannels = 2;
-            } else if (line == "P3") {
-                nChannels = 3;
-            } else {
-                return nullptr;
-            }
-            i++;
-        } else if (i == 1) {
-            istringstream iss(line);
-            iss >> width >> height;
-            pixelData = new uint8_t[width*height*nChannels];
-            k = 0;
-            i++;
-        } else if (i == 2) { //TODO whitespace is also good, not only newline (add this possibility)
-            if (nChannels != 1) {
-                int val = stoi(line);
-                if (!(0 < val && val < 65536)) {
-                    return nullptr;
+    bool binary;
+    string line;
+
+    file >> line;
+    if (line == "P1") {
+        binary = false;
+        nChannels = 1;
+    } else if (line == "P2") {
+        binary = false;
+        nChannels = 2;
+    } else if (line == "P3") {
+        binary = false;
+        nChannels = 3;
+    } else if (line == "P4") {
+        binary = true;
+        nChannels = 1;
+    } else if (line == "P5") {
+        binary = true;
+        nChannels = 2;
+    } else if (line == "P6") {
+        binary = true;
+        nChannels = 3;
+    } else {
+        return nullptr;
+    }
+
+    file.get(); //goto next line
+
+    do {
+        getline(file, line);
+    } while (line[0] == '#');
+
+
+    istringstream sizeStream(line);
+    cout << line << endl;
+    sizeStream >> width >> height;
+
+    if (nChannels != 1) {
+        int val;
+        file >> val;
+        if (!(0 < val && val < 65536)) {
+            return nullptr;
+        }
+        maxval = val;
+    } else {
+        maxval = 1;
+    }
+
+    file.get(); //goto next line
+
+    pixelData = new uint8_t[width * height * nChannels];
+
+    if (binary) {
+        char data;
+        if (maxval == 1) {
+            while (file.read(&data, 1)) {
+                for (int b = 7; b >= 0; b--) {
+                    pixelData[n] = (data >> b) & 1;
+                    n++;
                 }
-                maxval = val;
-            } else {
-                maxval = 1;
             }
-            i++;
-        } else if (i > 2) {
+        } else if (maxval < 256) {
+            while (file.read(&data, 1)) {
+                pixelData[n] = data;
+                n++;
+            }
+        } else {
+            while (file.read(&data, 2)) {
+                pixelData[n] = (data * (uint32_t) 255) / maxval; //TODO IMAGES ARE "QUANTIZED" TO A 8 BITDEPTH, SHOULD I CHANGE THIS?
+                n++;
+            }
+        }
+    } else {
+        while (getline(file, line)) {
             istringstream iss(line);
             string s;
             while (getline(iss, s, ' ')) { //TODO verify it works even with multiple whitespaces
                 unsigned short val = stoi(s);
-                uint8_t value = (val * (uint32_t)255) / maxval; //TODO IMAGES ARE "QUANTIZED" TO A 8 BITDEPTH, SHOULD I CHANGE THIS?
-                pixelData[k++] = value;
+                uint8_t value = (val * (uint32_t) 255) / maxval; //TODO IMAGES ARE "QUANTIZED" TO A 8 BITDEPTH, SHOULD I CHANGE THIS?
+                pixelData[n++] = value;
             }
         }
-        n++;
     }
 
     /*cout << "Width:" << width << endl;
@@ -87,11 +126,11 @@ Image * PNMFileHandler::load(const string& filename) {
     return nullptr;
 }
 
-bool PNMFileHandler::save(Image * image, const string& filename) {
+bool PNMFileHandler::save_plain(Image * image, const string& filename) {
     ofstream outfile;
     outfile.open(filename, ios_base::trunc);
 
-    outfile << "P" << (int)image->get_nChannels() << std::endl; //TODO check if P4 is a 4 channel image or not and if you can have 4 channels saved in this file format
+    outfile << "P" << (int)image->get_nChannels() << endl;
 
     outfile << "# This is a comment" << endl; //TODO remove, just for testing purpose, consider if keeping the original comments or not
 
@@ -109,7 +148,26 @@ bool PNMFileHandler::save(Image * image, const string& filename) {
         }
         outfile << endl;
     }
-    outfile << endl; //TODO CHECK IF OBLIGATORY OR NOT
+    outfile.close();
+    return true;
+}
+
+bool PNMFileHandler::save(Image * image, const string& filename) {
+    ofstream outfile;
+    outfile.open(filename, ios_base::trunc | ios_base::binary);
+
+    outfile << "P" << 3 + (int)image->get_nChannels() << std::endl;
+
+    outfile << "# This is a comment" << endl; //TODO remove, just for testing purpose, consider if keeping the original comments or not
+
+    outfile << image->get_width() << " " << image->get_height() << endl;
+
+    outfile << 255 << endl; //TODO images are saved with bitdepth=8, should i consider adding more options?? (i'll need to edit the pixel array to handle arbitrary precision ints)
+
+    for (int i = 0; i < image->get_width()*image->get_height(); i++){
+        char * pixel = (char *)image->get_at(i);
+        outfile.write(pixel, image->get_nChannels());
+    }
     outfile.close();
     return true;
 }

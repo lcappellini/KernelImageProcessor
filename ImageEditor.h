@@ -11,9 +11,18 @@
 #include "KernelMode.h"
 
 class ImageEditor {
+private:
+    static uint8_t rgbToGrayscale(const uint8_t *pixel);
 public:
-    static Image * convolve(Image *image, Kernel *kernel, KernelMode kernelMode = KernelMode::Crop);
-    //TODO add more "effects" like: crop, scale, ecc
+    //kernel image processing
+    static Image * convolve(Image * image, Kernel *kernel, KernelMode kernelMode = KernelMode::Crop, const uint8_t * fillColor = nullptr);
+    static Image * sharpen(Image *image);
+    static Image * gaussian_blur3(Image *image);
+    //other effects
+    static Image * invert(Image * image);
+    static Image * change_brightness(Image *image, int16_t value);
+    static Image * grayscale(Image *image);
+    static Image * crop(Image *image, uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1);
 };
 
 

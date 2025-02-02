@@ -17,6 +17,8 @@ private:
 public:
     static Image * load(const string& filename);
     static bool save(Image * image, const string& filename);
+
+    static bool save_plain(Image *image, const string &filename);
 };
 
 
