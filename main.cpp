@@ -4,23 +4,26 @@
 #include "ImageEditor.h"
 
 int main() {
-    //Image *img = PNMFileHandler::load(R"(C:\Users\Lorenzo\Desktop\UNI\LAB PROG\example files\animal.ppm)");
-    Image *img = PNMFileHandler::load(R"(C:\Users\Lorenzo\Desktop\UNI\LAB PROG\example files\animal_bytes.ppm)");
-
+/*
+    Image *img = PNMFileHandler::load(R"(C:\Users\Lorenzo\Desktop\UNI\LAB PROG\example files\animal.pbm)");
+    //Image *img = PNMFileHandler::load(R"(C:\Users\Lorenzo\Desktop\UNI\LAB PROG\example files\animal_bytes.ppm)");
+    
     cout << img->get_width() << endl;
     cout << img->get_height() << endl;
     cout << (int) img->get_nChannels() << endl;
 
-    uint8_t *pixel = img->get_at(3, 0);
+    uint8_t *pixel = img->get_at(51, 77);
     for (int i = 0; i < img->get_nChannels(); i++) {
-        cout << (int) pixel[i] << ",";
+        cout << (int)pixel[i] << ",";
     }
     cout << endl;
 
     Kernel *ker = new Kernel(3, new float[9]{-1, -1, -1, -1, 8, -1, -1, -1, -1});
 
+    bool success;
+
     Image * newimg = ImageEditor::convolve(img, ker, KernelMode::Wrap, new uint8_t[]{255, 0, 0});
-    bool success = PNMFileHandler::save(newimg, R"(C:\Users\Lorenzo\Desktop\UNI\LAB PROG\example files\mod_animal.ppm)");
+    success = PNMFileHandler::save(newimg, R"(C:\Users\Lorenzo\Desktop\UNI\LAB PROG\example files\mod_animal.ppm)");
 
     Image * invimg = ImageEditor::invert(img);
     success = PNMFileHandler::save(invimg, R"(C:\Users\Lorenzo\Desktop\UNI\LAB PROG\example files\inv_animal.ppm)");
@@ -44,7 +47,22 @@ int main() {
 
     Image * crimg = ImageEditor::crop(img, 14, 33, 61, 74);
     success = PNMFileHandler::save(crimg, R"(C:\Users\Lorenzo\Desktop\UNI\LAB PROG\example files\cr_animal.ppm)");
-    cout << success << endl;
+    cout << success << endl;*/
+
+
+    Image *p1 = PNMFileHandler::load(R"(C:\Users\Lorenzo\Desktop\UNI\LAB PROG\example files\tests\p1.pbm)");
+    cout << "p1 loaded" << endl;
+    Image *p2 = PNMFileHandler::load(R"(C:\Users\Lorenzo\Desktop\UNI\LAB PROG\example files\tests\p2.pgm)");
+    cout << "p2 loaded" << endl;
+    Image *p3 = PNMFileHandler::load(R"(C:\Users\Lorenzo\Desktop\UNI\LAB PROG\example files\tests\p3.ppm)");
+    cout << "p3 loaded" << endl;
+    Image *p4 = PNMFileHandler::load(R"(C:\Users\Lorenzo\Desktop\UNI\LAB PROG\example files\tests\p4.pbm)");
+    cout << "p4 loaded" << endl;
+    Image *p5 = PNMFileHandler::load(R"(C:\Users\Lorenzo\Desktop\UNI\LAB PROG\example files\tests\p5.pgm)");
+    cout << "p5 loaded" << endl;
+    Image *p6 = PNMFileHandler::load(R"(C:\Users\Lorenzo\Desktop\UNI\LAB PROG\example files\tests\p6.ppm)");
+    cout << "p6 loaded" << endl;
+
 
     return 0;
 }

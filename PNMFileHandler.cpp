@@ -23,8 +23,7 @@ Image * PNMFileHandler::load(const string& filename) {
 
     int n = 0;
     uint16_t width, height;
-    uint16_t maxval; // 0 < maxval < 65536
-    uint8_t *pixelData;
+    uint16_t maxval = 0; // 0 < maxval < 65536
     uint8_t nChannels;
     bool binary;
     string line;
@@ -33,18 +32,20 @@ Image * PNMFileHandler::load(const string& filename) {
     if (line == "P1") {
         binary = false;
         nChannels = 1;
+        maxval = 1;
     } else if (line == "P2") {
         binary = false;
-        nChannels = 2;
+        nChannels = 1;
     } else if (line == "P3") {
         binary = false;
         nChannels = 3;
     } else if (line == "P4") {
         binary = true;
         nChannels = 1;
+        maxval = 1;
     } else if (line == "P5") {
         binary = true;
-        nChannels = 2;
+        nChannels = 1;
     } else if (line == "P6") {
         binary = true;
         nChannels = 3;
@@ -60,31 +61,30 @@ Image * PNMFileHandler::load(const string& filename) {
 
 
     istringstream sizeStream(line);
-    cout << line << endl;
     sizeStream >> width >> height;
 
-    if (nChannels != 1) {
+    if (maxval != 1) {
         int val;
         file >> val;
         if (!(0 < val && val < 65536)) {
             return nullptr;
         }
         maxval = val;
-    } else {
-        maxval = 1;
+        file.get();
     }
 
-    file.get(); //goto next line
-
-    pixelData = new uint8_t[width * height * nChannels];
+    uint8_t * pixelData = new uint8_t[width * height * nChannels];
 
     if (binary) {
         char data;
         if (maxval == 1) {
             while (file.read(&data, 1)) {
                 for (int b = 7; b >= 0; b--) {
-                    pixelData[n] = (data >> b) & 1;
+                    pixelData[n] = ((data >> b) & 1) * 255;
                     n++;
+                    if (n % width == 0){
+                        break;
+                    }
                 }
             }
         } else if (maxval < 256) {
@@ -103,25 +103,27 @@ Image * PNMFileHandler::load(const string& filename) {
             istringstream iss(line);
             string s;
             while (getline(iss, s, ' ')) { //TODO verify it works even with multiple whitespaces
+                if (s.empty())
+                    continue;
                 unsigned short val = stoi(s);
+                if (nChannels == 1){
+                    val = val ? 0 : 1;
+                }
                 uint8_t value = (val * (uint32_t) 255) / maxval; //TODO IMAGES ARE "QUANTIZED" TO A 8 BITDEPTH, SHOULD I CHANGE THIS?
                 pixelData[n++] = value;
             }
         }
     }
 
-    /*cout << "Width:" << width << endl;
-    cout << "Height:" << height << endl;
-    cout << "Maxval:" << maxval << endl;*/
+    cout << "n: " << n << endl;
+    cout << "Size:" << width << ", " << height << endl;
+    cout << "Maxval:" << maxval << endl;
+    cout << "Channels:" << (int)nChannels << endl;
 
     if (nChannels == 1){
         return new PixelImage<1>(width, height, pixelData);
-    } else if (nChannels == 2){
-        return new PixelImage<2>(width, height, pixelData);
     } else if (nChannels == 3){
         return new PixelImage<3>(width, height, pixelData);
-    } else if (nChannels == 4){
-        return new PixelImage<4>(width, height, pixelData);
     }
     return nullptr;
 }
@@ -164,9 +166,24 @@ bool PNMFileHandler::save(Image * image, const string& filename) {
 
     outfile << 255 << endl; //TODO images are saved with bitdepth=8, should i consider adding more options?? (i'll need to edit the pixel array to handle arbitrary precision ints)
 
-    for (int i = 0; i < image->get_width()*image->get_height(); i++){
-        char * pixel = (char *)image->get_at(i);
-        outfile.write(pixel, image->get_nChannels());
+    if (image->get_nChannels() == 1) {
+        int k = 0;
+        uint8_t value = 0;
+        for (int i = 0; i < image->get_width() * image->get_height(); i++) {
+            char * pixel = (char *)image->get_at(i);
+            if (k % 8 == 0){
+                if (i != 0)
+                    outfile.write((char *)&value, 1);
+                k = 0;
+                value = 0;
+            }
+            value |= (((uint8_t)pixel[k] == 255) ? 1 : 0) << (7 - k);
+        }
+    } else {
+        for (int i = 0; i < image->get_width() * image->get_height(); i++) {
+            char *pixel = (char *)image->get_at(i);
+            outfile.write(pixel, image->get_nChannels());
+        }
     }
     outfile.close();
     return true;
