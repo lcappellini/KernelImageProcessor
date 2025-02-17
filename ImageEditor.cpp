@@ -41,24 +41,24 @@ Image *ImageEditor::convolve(Image *image, Kernel *kernel, KernelMode kernelMode
 
     if (chs == 1) {
         if (bitDepth == 8)
-            resImage = new PixelImage<1, uint8_t>(resW, resH, (uint8_t *)pixelData);
+            resImage = new PixelImage<1, 8>(resW, resH, (uint8_t *)pixelData);
         else
-            resImage = new PixelImage<1, uint16_t>(resW, resH, (uint16_t *)pixelData);
+            resImage = new PixelImage<1, 16>(resW, resH, (uint16_t *)pixelData);
     } else if (chs == 2) {
         if (bitDepth == 8)
-            resImage = new PixelImage<2, uint8_t>(resW, resH, (uint8_t *)pixelData);
+            resImage = new PixelImage<2, 8>(resW, resH, (uint8_t *)pixelData);
         else
-            resImage = new PixelImage<2, uint16_t>(resW, resH, (uint16_t *)pixelData);
+            resImage = new PixelImage<2, 16>(resW, resH, (uint16_t *)pixelData);
     } else if (chs == 3) {
         if (bitDepth == 8)
-            resImage = new PixelImage<3, uint8_t>(resW, resH, (uint8_t *)pixelData);
+            resImage = new PixelImage<3, 8>(resW, resH, (uint8_t *)pixelData);
         else
-            resImage = new PixelImage<3, uint16_t>(resW, resH, (uint16_t *)pixelData);
+            resImage = new PixelImage<3, 16>(resW, resH, (uint16_t *)pixelData);
     } else if (chs == 4) {
         if (bitDepth == 8)
-            resImage = new PixelImage<4, uint8_t>(resW, resH, (uint8_t *)pixelData);
+            resImage = new PixelImage<4, 8>(resW, resH, (uint8_t *)pixelData);
         else
-            resImage = new PixelImage<4, uint16_t>(resW, resH, (uint16_t *)pixelData);
+            resImage = new PixelImage<4, 16>(resW, resH, (uint16_t *)pixelData);
     }
 
     int x0, x1, y0, y1;
@@ -391,10 +391,10 @@ Image * ImageEditor::grayscale(Image *image) {
     uint8_t bitDepth = image->get_bitDepth();
 
     /*void * pixelData;
-    if (bitDepth == 8) {
+    if (bits == 8) {
         pixelData = new uint8_t[w * h * chs];
     }
-    else if (bitDepth == 16) {
+    else if (bits == 16) {
         pixelData = new uint16_t[w * h * chs];
     }
 
@@ -403,7 +403,7 @@ Image * ImageEditor::grayscale(Image *image) {
         uint16_t * pixel = image->get_at(i);
         uint16_t grayscale = rgbToGrayscale(pixel);
         for (int c = 0; c < chs; c++) {
-            if (bitDepth == 8)
+            if (bits == 8)
                 reinterpret_cast<uint8_t *>(pixelData)[n] = (uint8_t)grayscale;
             else
                 reinterpret_cast<uint16_t *>(pixelData)[n] = (uint16_t)grayscale;
@@ -472,17 +472,17 @@ Image *ImageEditor::crop(Image *image, uint16_t x0, uint16_t y0, uint16_t x1, ui
 Image * ImageEditor::CreatePixelImage(int chs, int bitDepth, int resW, int resH, void* pixelData) {
     if (bitDepth == 8) {
         switch (chs) {
-            case 1: return new PixelImage<1, uint8_t>(resW, resH, (uint8_t*)pixelData);
-            case 2: return new PixelImage<2, uint8_t>(resW, resH, (uint8_t*)pixelData);
-            case 3: return new PixelImage<3, uint8_t>(resW, resH, (uint8_t*)pixelData);
-            case 4: return new PixelImage<4, uint8_t>(resW, resH, (uint8_t*)pixelData);
+            case 1: return new PixelImage<1, 8>(resW, resH, (uint8_t*)pixelData);
+            case 2: return new PixelImage<2, 8>(resW, resH, (uint8_t*)pixelData);
+            case 3: return new PixelImage<3, 8>(resW, resH, (uint8_t*)pixelData);
+            case 4: return new PixelImage<4, 8>(resW, resH, (uint8_t*)pixelData);
         }
     } else {
         switch (chs) {
-            case 1: return new PixelImage<1, uint16_t>(resW, resH, (uint16_t*)pixelData);
-            case 2: return new PixelImage<2, uint16_t>(resW, resH, (uint16_t*)pixelData);
-            case 3: return new PixelImage<3, uint16_t>(resW, resH, (uint16_t*)pixelData);
-            case 4: return new PixelImage<4, uint16_t>(resW, resH, (uint16_t*)pixelData);
+            case 1: return new PixelImage<1, 16>(resW, resH, (uint16_t*)pixelData);
+            case 2: return new PixelImage<2, 16>(resW, resH, (uint16_t*)pixelData);
+            case 3: return new PixelImage<3, 16>(resW, resH, (uint16_t*)pixelData);
+            case 4: return new PixelImage<4, 16>(resW, resH, (uint16_t*)pixelData);
         }
     }
     return nullptr;

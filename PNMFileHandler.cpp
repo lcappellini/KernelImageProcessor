@@ -131,15 +131,15 @@ Image * PNMFileHandler::load(const string& filename) {
 
     if (nChannels == 1){
         if (bitDepth == 8) {
-            return new PixelImage<1, uint8_t>(width, height, (uint8_t *)pixelData);
+            return new PixelImage<1, 8>(width, height, (uint8_t *)pixelData);
         } else if (bitDepth == 16) {
-            return new PixelImage<1, uint16_t>(width, height, (uint16_t *)pixelData);
+            return new PixelImage<1, 16>(width, height, (uint16_t *)pixelData);
         }
     } else if (nChannels == 3){
         if (bitDepth == 8) {
-            return new PixelImage<3, uint8_t>(width, height, (uint8_t *)pixelData);
+            return new PixelImage<3, 8>(width, height, (uint8_t *)pixelData);
         } else if (bitDepth == 16) {
-            return new PixelImage<3, uint16_t>(width, height, (uint16_t *)pixelData);
+            return new PixelImage<3, 16>(width, height, (uint16_t *)pixelData);
         }
     }
     return nullptr;
