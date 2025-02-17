@@ -4,8 +4,13 @@
 
 int main() {
 
-    Image * img = PNMFileHandler::load(R"(C:\Users\Lorenzo\Desktop\UNI\LAB PROG\example files\animal_bytes.ppm)");
+    //Image * img = PNMFileHandler::load(R"(C:\Users\Lorenzo\Desktop\UNI\LAB PROG\example files\animal.ppm)");
+    //Image * img = PNMFileHandler::load(R"(C:\Users\Lorenzo\Desktop\UNI\LAB PROG\example files\animal_bytes.ppm)");
+    Image * img = PNMFileHandler::load(R"(C:\Users\Lorenzo\Desktop\UNI\LAB PROG\example files\animal_bytescomm.ppm)");
     //Image * img = PNMFileHandler::load(R"(C:\Users\Lorenzo\Desktop\UNI\LAB PROG\example files\statue_bytes16.ppm)");
+
+    //PNMFileHandler::save_plain(img, R"(C:\Users\Lorenzo\Desktop\UNI\LAB PROG\example files\animal_bytescomm.ppm)", "comment 1\nciao\nauihgb\nhi");
+    PNMFileHandler::save_plain(img, R"(C:\Users\Lorenzo\Desktop\UNI\LAB PROG\example files\animal_comm.ppm)");
 
     cout << img->get_width() << endl;
     cout << img->get_height() << endl;

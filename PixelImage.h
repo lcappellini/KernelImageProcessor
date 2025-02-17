@@ -58,7 +58,7 @@ PixelImage<numChannels, T>::PixelImage(unsigned short w, unsigned short h, T * p
 
 template <uint8_t numChannels, typename T>
 uint16_t * PixelImage<numChannels, T>::get_at_unsafe(int index) const {
-    auto * pixel = new uint16_t[nChannels]; //TODO use some fancier method to copy the array data
+    auto * pixel = new uint16_t[nChannels];
     for (int i = 0; i < nChannels; i++) {
         pixel[i] = pixels[nChannels*index+i];
     }

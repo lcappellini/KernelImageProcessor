@@ -11,7 +11,7 @@
 
 using namespace std;
 
-
+string PNMFileHandler::defaultComment = "Made with KernelImageProcessor";
 const string PNMFileHandler::validExtensions[3] = {"ppm", "pgm", "pbm"};
 
 Image * PNMFileHandler::load(const string& filename) {
@@ -32,7 +32,7 @@ Image * PNMFileHandler::load(const string& filename) {
 
     file >> magic;
 
-    while (file.peek() == '\n' || file.peek() == '#'){
+    while (file.peek() == '\n' || file.peek() == '\r' || file.peek() == '#'){
         getline(file, line);
     }
 
@@ -104,7 +104,7 @@ Image * PNMFileHandler::load(const string& filename) {
         while (getline(file, line)) {
             istringstream iss(line);
             string s;
-            while (getline(iss, s, ' ')) { //TODO verify it works even with multiple whitespaces
+            while (getline(iss, s, ' ')) { //TODO verify if it works with multiple whitespaces
                 if (s.empty())
                     continue;
                 unsigned short val = stoi(s);
@@ -145,7 +145,7 @@ Image * PNMFileHandler::load(const string& filename) {
     return nullptr;
 }
 
-int PNMFileHandler::save_plain(Image * image, const string& filename) {
+int PNMFileHandler::save_plain(Image * image, const string& filename, const string& comments) {
     ofstream outfile;
     outfile.open(filename, ios_base::trunc);
 
@@ -158,7 +158,11 @@ int PNMFileHandler::save_plain(Image * image, const string& filename) {
 
     outfile << "P" << (int)magic << endl;
 
-    outfile << "# This is a comment" << endl; //TODO remove, just for testing purpose, consider if keeping the original comments or not
+    stringstream commentsStream(comments);
+    string line;
+    while (getline(commentsStream, line)) {
+        outfile << "# " << line << endl;
+    }
 
     outfile << image->get_width() << " " << image->get_height() << endl;
 
@@ -180,7 +184,7 @@ int PNMFileHandler::save_plain(Image * image, const string& filename) {
     return 0;
 }
 
-int PNMFileHandler::save(Image * image, const string& filename) {
+int PNMFileHandler::save(Image * image, const string& filename, const string& comments) {
     ofstream outfile;
     outfile.open(filename, ios_base::trunc | ios_base::binary);
 
@@ -193,7 +197,11 @@ int PNMFileHandler::save(Image * image, const string& filename) {
 
     outfile << "P" << (int)magic << std::endl;
 
-    outfile << "# This is a comment" << endl; //TODO remove, just for testing purpose. Consider if keeping the original comments or not
+    stringstream commentsStream(comments);
+    string line;
+    while (getline(commentsStream, line)) {
+        outfile << "# " << line << endl;
+    }
 
     outfile << image->get_width() << " " << image->get_height() << endl;
 
@@ -201,38 +209,6 @@ int PNMFileHandler::save(Image * image, const string& filename) {
     outfile << maxval << endl;
 
     uint8_t bitDepth = image->get_bitDepth();
-
-    /*if (image->get_nChannels() == 1) {
-        int k = 0;
-        uint16_t value = 0;
-        for (int i = 0; i < image->get_width() * image->get_height(); i++) {
-            uint16_t * pixel = image->get_at(i);
-            if (k % 8 == 0){
-                if (i != 0)
-                    outfile.write((char *)&value, 1);
-                k = 0;
-                value = 0;
-            }
-            value |= (((uint16_t)pixel[k] == 255) ? 1 : 0) << (7 - k);
-        }
-    } else {
-        for (int i = 0; i < image->get_width() * image->get_height(); i++) {
-            uint16_t *pixel = image->get_at(i);
-            if (bitDepth == 8) {
-                for (int j = 0; j < image->get_nChannels(); j++) {
-                    //outfile.write((char*)((uint8_t*)&pixel[j]), 1);
-                    outfile.put((char)pixel[j]);
-                }
-            } else {
-                for (int j = 0; j < image->get_nChannels(); j++) {
-                    uint16_t value = pixel[j];
-                    outfile.put((char)((value >> 8) & 0xFF));
-                    outfile.put((char)(value & 0xFF));
-                }
-            }
-        }
-    }*/
-
     for (int i = 0; i < image->get_width() * image->get_height(); i++) {
         uint16_t *pixel = image->get_at(i);
         if (bitDepth == 8) {

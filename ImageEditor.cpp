@@ -15,7 +15,7 @@ Image *ImageEditor::convolve(Image *image, Kernel *kernel, KernelMode kernelMode
     uint16_t w = image->get_width();
     uint16_t h = image->get_height();
     //TODO should i enable raw pixel data access to speed up the process?
-    //TODO asserting kernel size is ODD, check if code works with EVEN kernel size
+    //TODO assuming kernel size is ODD, check if code works with EVEN kernel size
     uint16_t size = kernel->get_size();
     uint16_t halfSize = size / 2;
     uint16_t resW, resH;
@@ -310,7 +310,7 @@ Image * ImageEditor::gaussian_blur3(Image * image){
     return resImage;
 }
 
-Image * ImageEditor::invert(Image *image) { //FIXME shouldn't affect alpha value
+Image * ImageEditor::invert(Image *image) {
     uint8_t chs = image->get_nChannels();
     uint16_t w = image->get_width();
     uint16_t h = image->get_height();
@@ -339,7 +339,7 @@ Image * ImageEditor::invert(Image *image) { //FIXME shouldn't affect alpha value
     return CreatePixelImage(chs, bitDepth, w, h, pixelData);
 }
 
-Image * ImageEditor::change_brightness(Image *image, float factor) { //FIXME shouldn't affect alpha value
+Image * ImageEditor::change_brightness(Image *image, float factor) {
     uint8_t chs = image->get_nChannels();
     uint16_t w = image->get_width();
     uint16_t h = image->get_height();
