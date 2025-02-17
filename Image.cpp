@@ -16,3 +16,7 @@ uint16_t Image::get_height() const {
 uint8_t Image::get_nChannels() const {
     return nChannels;
 }
+
+uint8_t Image::get_bitDepth() const {
+    return bitDepth;
+}

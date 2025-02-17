@@ -9,6 +9,7 @@
 
 using namespace std;
 
+
 Image *ImageEditor::convolve(Image *image, Kernel *kernel, KernelMode kernelMode, const uint8_t * fillColor) {
     uint8_t chs = image->get_nChannels();
     uint16_t w = image->get_width();
@@ -26,16 +27,38 @@ Image *ImageEditor::convolve(Image *image, Kernel *kernel, KernelMode kernelMode
         resH = h;
     }
 
+    uint8_t bitDepth = image->get_bitDepth();
+    float maxBitValue = (float)pow(2, bitDepth)-1;
+
     Image * resImage;
-    auto * pixelData = new uint8_t[resW*resH*chs];
-    if (chs == 1){
-        resImage = new PixelImage<1>(resW, resH, pixelData);
-    } else if (chs == 2){
-        resImage = new PixelImage<2>(resW, resH, pixelData);
-    } else if (chs == 3){
-        resImage = new PixelImage<3>(resW, resH, pixelData);
-    } else if (chs == 4){
-        resImage = new PixelImage<4>(resW, resH, pixelData);
+    void * pixelData;
+    if (bitDepth == 8) {
+        pixelData = new uint8_t[resW * resH * chs];
+    }
+    else if (bitDepth == 16) {
+        pixelData = new uint16_t[resW * resH * chs];
+    }
+
+    if (chs == 1) {
+        if (bitDepth == 8)
+            resImage = new PixelImage<1, uint8_t>(resW, resH, (uint8_t *)pixelData);
+        else
+            resImage = new PixelImage<1, uint16_t>(resW, resH, (uint16_t *)pixelData);
+    } else if (chs == 2) {
+        if (bitDepth == 8)
+            resImage = new PixelImage<2, uint8_t>(resW, resH, (uint8_t *)pixelData);
+        else
+            resImage = new PixelImage<2, uint16_t>(resW, resH, (uint16_t *)pixelData);
+    } else if (chs == 3) {
+        if (bitDepth == 8)
+            resImage = new PixelImage<3, uint8_t>(resW, resH, (uint8_t *)pixelData);
+        else
+            resImage = new PixelImage<3, uint16_t>(resW, resH, (uint16_t *)pixelData);
+    } else if (chs == 4) {
+        if (bitDepth == 8)
+            resImage = new PixelImage<4, uint8_t>(resW, resH, (uint8_t *)pixelData);
+        else
+            resImage = new PixelImage<4, uint16_t>(resW, resH, (uint16_t *)pixelData);
     }
 
     int x0, x1, y0, y1;
@@ -62,11 +85,14 @@ Image *ImageEditor::convolve(Image *image, Kernel *kernel, KernelMode kernelMode
                             sum += (float)image->get_at(x-halfSize+j, y-halfSize+i)[c] * kernel->get_at(j, i);
                         }
                     }
-                    if (sum > 255)
-                        sum = 255;
+                    if (sum > maxBitValue)
+                        sum = maxBitValue;
                     else if (sum < 0)
                         sum = 0;
-                    pixelData[n] = (uint8_t)sum;
+                    if (bitDepth == 8)
+                        reinterpret_cast<uint8_t *>(pixelData)[n] = (uint8_t)sum;
+                    else
+                        reinterpret_cast<uint16_t *>(pixelData)[n] = (uint16_t)sum;
                     n++;
                 }
             }
@@ -97,11 +123,14 @@ Image *ImageEditor::convolve(Image *image, Kernel *kernel, KernelMode kernelMode
                             sum += (float)image->get_at(px, py)[c] * kernel->get_at(j, i);
                         }
                     }
-                    if (sum > 255)
-                        sum = 255;
+                    if (sum > maxBitValue)
+                        sum = maxBitValue;
                     else if (sum < 0)
                         sum = 0;
-                    pixelData[n] = (uint8_t)sum;
+                    if (bitDepth == 8)
+                        reinterpret_cast<uint8_t *>(pixelData)[n] = (uint8_t)sum;
+                    else
+                        reinterpret_cast<uint16_t *>(pixelData)[n] = (uint16_t)sum;
                     n++;
                 }
             }
@@ -132,11 +161,14 @@ Image *ImageEditor::convolve(Image *image, Kernel *kernel, KernelMode kernelMode
                             sum += (float)image->get_at(px, py)[c] * kernel->get_at(j, i);
                         }
                     }
-                    if (sum > 255)
-                        sum = 255;
+                    if (sum > maxBitValue)
+                        sum = maxBitValue;
                     else if (sum < 0)
                         sum = 0;
-                    pixelData[n] = (uint8_t)sum;
+                    if (bitDepth == 8)
+                        reinterpret_cast<uint8_t *>(pixelData)[n] = (uint8_t)sum;
+                    else
+                        reinterpret_cast<uint16_t *>(pixelData)[n] = (uint16_t)sum;
                     n++;
                 }
             }
@@ -167,11 +199,14 @@ Image *ImageEditor::convolve(Image *image, Kernel *kernel, KernelMode kernelMode
                             sum += (float)image->get_at(px, py)[c] * kernel->get_at(j, i);
                         }
                     }
-                    if (sum > 255)
-                        sum = 255;
+                    if (sum > maxBitValue)
+                        sum = maxBitValue;
                     else if (sum < 0)
                         sum = 0;
-                    pixelData[n] = (uint8_t)sum;
+                    if (bitDepth == 8)
+                        reinterpret_cast<uint8_t *>(pixelData)[n] = (uint8_t)sum;
+                    else
+                        reinterpret_cast<uint16_t *>(pixelData)[n] = (uint16_t)sum;
                     n++;
                 }
             }
@@ -202,11 +237,14 @@ Image *ImageEditor::convolve(Image *image, Kernel *kernel, KernelMode kernelMode
                             sum += (float)image->get_at(px, py)[c] * kernel->get_at(j, i);
                         }
                     }
-                    if (sum > 255)
-                        sum = 255;
+                    if (sum > maxBitValue)
+                        sum = maxBitValue;
                     else if (sum < 0)
                         sum = 0;
-                    pixelData[n] = (uint8_t)sum;
+                    if (bitDepth == 8)
+                        reinterpret_cast<uint8_t *>(pixelData)[n] = (uint8_t)sum;
+                    else
+                        reinterpret_cast<uint16_t *>(pixelData)[n] = (uint16_t)sum;
                     n++;
                 }
             }
@@ -244,11 +282,14 @@ Image *ImageEditor::convolve(Image *image, Kernel *kernel, KernelMode kernelMode
                                 sum += (float)image->get_at(px, py)[c] * kernel->get_at(j, i);
                         }
                     }
-                    if (sum > 255)
-                        sum = 255;
+                    if (sum > maxBitValue)
+                        sum = maxBitValue;
                     else if (sum < 0)
                         sum = 0;
-                    pixelData[n] = (uint8_t)sum;
+                    if (bitDepth == 8)
+                        reinterpret_cast<uint8_t *>(pixelData)[n] = (uint8_t)sum;
+                    else
+                        reinterpret_cast<uint16_t *>(pixelData)[n] = (uint16_t)sum;
                     n++;
                 }
             }
@@ -273,132 +314,179 @@ Image * ImageEditor::invert(Image *image) { //FIXME shouldn't affect alpha value
     uint8_t chs = image->get_nChannels();
     uint16_t w = image->get_width();
     uint16_t h = image->get_height();
+    uint8_t bitDepth = image->get_bitDepth();
 
-    uint8_t * pixelData = new uint8_t[w*h*chs];
+    void * pixelData;
+    if (bitDepth == 8) {
+        pixelData = new uint8_t[w * h * chs];
+    }
+    else if (bitDepth == 16) {
+        pixelData = new uint16_t[w * h * chs];
+    }
 
     int n = 0;
     for (int i = 0; i < w*h; i++){
-        uint8_t * pixel = image->get_at(i);
+        uint16_t * pixel = image->get_at(i);
         for (int c = 0; c < chs; c++) {
-            pixelData[n] = 255-pixel[c];
+            if (bitDepth == 8)
+                reinterpret_cast<uint8_t *>(pixelData)[n] = (uint8_t)255-pixel[c];
+            else
+                reinterpret_cast<uint16_t *>(pixelData)[n] = (uint16_t)65536-pixel[c];
             n++;
         }
     }
 
-    if (chs == 1) {
-        return new PixelImage<1>(image->get_width(), image->get_height(), pixelData);
-    } else if (chs == 2) {
-        return new PixelImage<2>(image->get_width(), image->get_height(), pixelData);
-    } else if (chs == 3) {
-        return new PixelImage<3>(image->get_width(), image->get_height(), pixelData);
-    } else if (chs == 4) {
-        return new PixelImage<4>(image->get_width(), image->get_height(), pixelData);
-    }
-    return nullptr;
+    return CreatePixelImage(chs, bitDepth, w, h, pixelData);
 }
 
-Image * ImageEditor::change_brightness(Image *image, int16_t value) { //FIXME shouldn't affect alpha value
+Image * ImageEditor::change_brightness(Image *image, float factor) { //FIXME shouldn't affect alpha value
     uint8_t chs = image->get_nChannels();
     uint16_t w = image->get_width();
     uint16_t h = image->get_height();
+    uint8_t bitDepth = image->get_bitDepth();
+    uint16_t maxBitValue = (uint32_t)pow(2, bitDepth)-1;
 
-    uint8_t * pixelData = new uint8_t[w*h*chs];
+    int32_t value = (int32_t)((factor - 1)*(float)maxBitValue);
+
+    void * pixelData;
+    if (bitDepth == 8) {
+        pixelData = new uint8_t[w * h * chs];
+    }
+    else if (bitDepth == 16) {
+        pixelData = new uint16_t[w * h * chs];
+    }
 
     int n = 0;
     for (int i = 0; i < w*h; i++){
-        uint8_t * pixel = image->get_at(i);
+        uint16_t * pixel = image->get_at(i);
         for (int c = 0; c < chs; c++) {
             int result = value+pixel[c];
-            if (result > 255)
-                result = 255;
+            if (result > maxBitValue)
+                result = maxBitValue;
             else if (result < 0)
                 result = 0;
-            pixelData[n] = result;
+            if (bitDepth == 8)
+                reinterpret_cast<uint8_t *>(pixelData)[n] = (uint8_t)result;
+            else
+                reinterpret_cast<uint16_t *>(pixelData)[n] = (uint16_t)result;
             n++;
         }
     }
 
-    if (chs == 1) {
-        return new PixelImage<1>(image->get_width(), image->get_height(), pixelData);
-    } else if (chs == 2) {
-        return new PixelImage<2>(image->get_width(), image->get_height(), pixelData);
-    } else if (chs == 3) {
-        return new PixelImage<3>(image->get_width(), image->get_height(), pixelData);
-    } else if (chs == 4) {
-        return new PixelImage<4>(image->get_width(), image->get_height(), pixelData);
-    }
-    return nullptr;
+    return CreatePixelImage(chs, bitDepth, w, h, pixelData);
 }
 
-uint8_t ImageEditor::rgbToGrayscale(const uint8_t * pixel) {
-    return (uint8_t)(0.299 * pixel[0] + 0.587 * pixel[1] + 0.114 * pixel[2]);
+uint16_t ImageEditor::rgbToGrayscale(const uint16_t * pixel) {
+    return (uint16_t)(0.299 * pixel[0] + 0.587 * pixel[1] + 0.114 * pixel[2]);
 }
 
 Image * ImageEditor::grayscale(Image *image) {
     uint8_t chs = image->get_nChannels();
+    if (chs < 3){
+        throw std::runtime_error("Image is already grayscale");
+    }
+
     uint16_t w = image->get_width();
     uint16_t h = image->get_height();
+    uint8_t bitDepth = image->get_bitDepth();
 
-    uint8_t * pixelData = new uint8_t[w*h*chs];
+    /*void * pixelData;
+    if (bitDepth == 8) {
+        pixelData = new uint8_t[w * h * chs];
+    }
+    else if (bitDepth == 16) {
+        pixelData = new uint16_t[w * h * chs];
+    }
 
     int n = 0;
     for (int i = 0; i < w*h; i++){
-        uint8_t * pixel = image->get_at(i);
-        uint8_t grayscale = rgbToGrayscale(pixel);
+        uint16_t * pixel = image->get_at(i);
+        uint16_t grayscale = rgbToGrayscale(pixel);
         for (int c = 0; c < chs; c++) {
-            pixelData[n] = grayscale;
+            if (bitDepth == 8)
+                reinterpret_cast<uint8_t *>(pixelData)[n] = (uint8_t)grayscale;
+            else
+                reinterpret_cast<uint16_t *>(pixelData)[n] = (uint16_t)grayscale;
             n++;
         }
+    }*/
+
+    void * pixelData;
+    if (bitDepth == 8) {
+        pixelData = new uint8_t[w * h * 1];
+    }
+    else if (bitDepth == 16) {
+        pixelData = new uint16_t[w * h * 1];
     }
 
-    if (chs == 1) {
-        return new PixelImage<1>(image->get_width(), image->get_height(), pixelData);
-    } else if (chs == 2) {
-        return new PixelImage<2>(image->get_width(), image->get_height(), pixelData);
-    } else if (chs == 3) {
-        return new PixelImage<3>(image->get_width(), image->get_height(), pixelData);
-    } else if (chs == 4) {
-        return new PixelImage<4>(image->get_width(), image->get_height(), pixelData);
+    int n = 0;
+    for (int i = 0; i < w*h; i++){
+        uint16_t * pixel = image->get_at(i);
+        uint16_t grayscale = rgbToGrayscale(pixel);
+        if (bitDepth == 8)
+            reinterpret_cast<uint8_t *>(pixelData)[n] = (uint8_t)grayscale;
+        else
+            reinterpret_cast<uint16_t *>(pixelData)[n] = (uint16_t)grayscale;
+        n++;
     }
-    return nullptr;
+
+    return CreatePixelImage(1, bitDepth, w, h, pixelData);
 }
 
 Image *ImageEditor::crop(Image *image, uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1) {
     uint8_t chs = image->get_nChannels();
     uint16_t w = image->get_width();
     uint16_t h = image->get_height();
+    uint8_t bitDepth = image->get_bitDepth();
 
     if (x0 >= x1 || y0 >= y1 || x1 >= w || y1 >= h || x0 < 0 || y0 < 0) {
         throw invalid_argument("Parameters x0,y0,x1,y1 must satisfy 0<=x0<x1<width and 0<=y0<y1<height");
     }
 
-    uint8_t * pixelData = new uint8_t[(x1-x0)*(y1-y0)*chs];
+    void * pixelData;
+    if (bitDepth == 8) {
+        pixelData = new uint8_t[(x1-x0) * (y1-y0) * chs];
+    }
+    else if (bitDepth == 16) {
+        pixelData = new uint16_t[(x1-x0) * (y1-y0) * chs];
+    }
 
     int n = 0;
     for (int y = y0; y < y1; y++){
         for (int x = x0; x < x1; x++) {
-            uint8_t * pixel = image->get_at(x, y);
+            uint16_t * pixel = image->get_at(x, y);
             for (int c = 0; c < chs; c++) {
-                pixelData[n] = pixel[c];
+                if (bitDepth == 8)
+                    reinterpret_cast<uint8_t *>(pixelData)[n] = (uint8_t)pixel[c];
+                else
+                    reinterpret_cast<uint16_t *>(pixelData)[n] = (uint16_t)pixel[c];
                 n++;
             }
         }
     }
 
-    if (chs == 1) {
-        return new PixelImage<1>(x1-x0, y1-y0, pixelData);
-    } else if (chs == 2) {
-        return new PixelImage<2>(x1-x0, y1-y0, pixelData);
-    } else if (chs == 3) {
-        return new PixelImage<3>(x1-x0, y1-y0, pixelData);
-    } else if (chs == 4) {
-        return new PixelImage<4>(x1-x0, y1-y0, pixelData);
-    }
-    return nullptr;
+    return CreatePixelImage(chs, bitDepth, x1-x0, y1-y0, pixelData);
 }
 
 
-
+Image * ImageEditor::CreatePixelImage(int chs, int bitDepth, int resW, int resH, void* pixelData) {
+    if (bitDepth == 8) {
+        switch (chs) {
+            case 1: return new PixelImage<1, uint8_t>(resW, resH, (uint8_t*)pixelData);
+            case 2: return new PixelImage<2, uint8_t>(resW, resH, (uint8_t*)pixelData);
+            case 3: return new PixelImage<3, uint8_t>(resW, resH, (uint8_t*)pixelData);
+            case 4: return new PixelImage<4, uint8_t>(resW, resH, (uint8_t*)pixelData);
+        }
+    } else {
+        switch (chs) {
+            case 1: return new PixelImage<1, uint16_t>(resW, resH, (uint16_t*)pixelData);
+            case 2: return new PixelImage<2, uint16_t>(resW, resH, (uint16_t*)pixelData);
+            case 3: return new PixelImage<3, uint16_t>(resW, resH, (uint16_t*)pixelData);
+            case 4: return new PixelImage<4, uint16_t>(resW, resH, (uint16_t*)pixelData);
+        }
+    }
+    return nullptr;
+}
 
 
 

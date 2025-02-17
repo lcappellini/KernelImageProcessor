@@ -12,7 +12,8 @@
 
 class ImageEditor {
 private:
-    static uint8_t rgbToGrayscale(const uint8_t *pixel);
+    static uint16_t rgbToGrayscale(const uint16_t *pixel);
+    static Image * CreatePixelImage(int chs, int bitDepth, int resW, int resH, void *pixelData);
 public:
     //kernel image processing
     static Image * convolve(Image * image, Kernel *kernel, KernelMode kernelMode = KernelMode::Crop, const uint8_t * fillColor = nullptr);
@@ -20,9 +21,10 @@ public:
     static Image * gaussian_blur3(Image *image);
     //other effects
     static Image * invert(Image * image);
-    static Image * change_brightness(Image *image, int16_t value);
+    static Image * change_brightness(Image *image, float factor);
     static Image * grayscale(Image *image);
     static Image * crop(Image *image, uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1);
+
 };
 
 
