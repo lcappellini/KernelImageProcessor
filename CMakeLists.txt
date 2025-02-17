@@ -3,8 +3,9 @@ project(KernelImageProcessor)
 
 set(CMAKE_CXX_STANDARD 11)
 
-add_executable(KernelImageProcessor main.cpp
-        PixelImage.cpp
+add_subdirectory(test)
+
+set(SOURCE_FILES PixelImage.cpp
         PixelImage.h
         PNMFileHandler.cpp
         PNMFileHandler.h
@@ -15,3 +16,7 @@ add_executable(KernelImageProcessor main.cpp
         Kernel.cpp
         Kernel.h
         KernelMode.h)
+
+add_executable(KernelImageProcessor main.cpp)
+add_library(core ${SOURCE_FILES})
+target_link_libraries(KernelImageProcessor core)
