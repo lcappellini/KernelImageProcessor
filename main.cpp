@@ -6,15 +6,24 @@ int main() {
 
     //Image * img = PNMFileHandler::load(R"(C:\Users\Lorenzo\Desktop\UNI\LAB PROG\example files\animal.ppm)");
     //Image * img = PNMFileHandler::load(R"(C:\Users\Lorenzo\Desktop\UNI\LAB PROG\example files\animal_bytes.ppm)");
-    Image * img = PNMFileHandler::load(R"(C:\Users\Lorenzo\Desktop\UNI\LAB PROG\example files\animal_bytescomm.ppm)");
-    //Image * img = PNMFileHandler::load(R"(C:\Users\Lorenzo\Desktop\UNI\LAB PROG\example files\statue_bytes16.ppm)");
+    //Image * img = PNMFileHandler::load(R"(C:\Users\Lorenzo\Desktop\UNI\LAB PROG\example files\animal_bytescomm.ppm)");
+    Image * img = PNMFileHandler::load(R"(C:\Users\Lorenzo\Desktop\UNI\LAB PROG\example files\statue_bytes16.ppm)");
 
-    PNMFileHandler::save_plain(img, R"(C:\Users\Lorenzo\Desktop\UNI\LAB PROG\example files\animal_comm.ppm)");
+    //PNMFileHandler::save_plain(img, R"(C:\Users\Lorenzo\Desktop\UNI\LAB PROG\example files\animal_comm.ppm)");
 
     cout << img->get_width() << endl;
     cout << img->get_height() << endl;
     cout << (int)img->get_nChannels() << endl;
     cout << (int)img->get_bitDepth() << endl;
+
+
+    /*Image * grimg = ImageEditor::grayscale(img);
+
+    PNMFileHandler::save_plain(img, R"(C:\Users\Lorenzo\Desktop\UNI\LAB PROG\KernelImageProcessor\test\data\P3_16.ppm)");
+    PNMFileHandler::save(img, R"(C:\Users\Lorenzo\Desktop\UNI\LAB PROG\KernelImageProcessor\test\data\P6_16.ppm)");
+
+    PNMFileHandler::save_plain(grimg, R"(C:\Users\Lorenzo\Desktop\UNI\LAB PROG\KernelImageProcessor\test\data\P2_16.ppm)");
+    PNMFileHandler::save(grimg, R"(C:\Users\Lorenzo\Desktop\UNI\LAB PROG\KernelImageProcessor\test\data\P5_16.ppm)");*/
 
     /*uint16_t *pixel = img->get_at(51, 77);
     for (int i = 0; i < img->get_nChannels(); i++) {
@@ -22,7 +31,7 @@ int main() {
     }
     cout << endl;*/
 
-    Kernel *ker = new Kernel(3, new float[9]{-1, -1, -1, -1, 8, -1, -1, -1, -1});
+    /*Kernel *ker = new Kernel(3, new float[9]{-1, -1, -1, -1, 8, -1, -1, -1, -1});
 
     Image * newimg = ImageEditor::convolve(img, ker, KernelMode::Crop, new uint8_t[]{255, 0, 0});
     PNMFileHandler::save_plain(newimg, R"(C:\Users\Lorenzo\Desktop\UNI\LAB PROG\example files\mod_animal.ppm)");
@@ -58,7 +67,7 @@ int main() {
     Image *p5 = PNMFileHandler::load(R"(C:\Users\Lorenzo\Desktop\UNI\LAB PROG\example files\tests\p5.pgm)");
     cout << "p5 loaded" << endl;
     Image *p6 = PNMFileHandler::load(R"(C:\Users\Lorenzo\Desktop\UNI\LAB PROG\example files\tests\p6.ppm)");
-    cout << "p6 loaded" << endl;
+    cout << "p6 loaded" << endl;*/
 
 
 

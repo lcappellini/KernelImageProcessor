@@ -29,6 +29,9 @@ Image * PNMFileHandler::load(const string& filename) {
     string magic;
 
     ifstream file(filename, std::ios::binary);
+    if (!file) {
+        throw runtime_error("File not found");
+    }
 
     file >> magic;
 
@@ -46,7 +49,7 @@ Image * PNMFileHandler::load(const string& filename) {
 
 
     bitDepth = maxval > 255 ? 16 : 8;
-    uint32_t maxBitValue = (uint32_t)pow(2, bitDepth);
+    uint32_t maxBitValue = (uint32_t)(pow(2, bitDepth)-1);
 
     if (magic == "P1" || magic == "P2") {
         binary = false;
@@ -78,7 +81,7 @@ Image * PNMFileHandler::load(const string& filename) {
             char data;
             while (file.read(&data, 1)) {
                 for (int b = 7; b >= 0; b--) {
-                    reinterpret_cast<uint8_t*>(pixelData)[n] = ((data >> b) & 1) * 255;
+                    reinterpret_cast<uint8_t*>(pixelData)[n] = (((data >> b) & 1) ^ 1) * 255; //xor because 0=255 and 1=0
                     n++;
                     if (n % width == 0){
                         break;
@@ -88,7 +91,10 @@ Image * PNMFileHandler::load(const string& filename) {
         } else if (maxval < 256) {
             char data;
             while (file.read(&data, 1)) {
-                reinterpret_cast<uint8_t*>(pixelData)[n] = (data * maxBitValue) / maxval;
+                if (maxval == 255)
+                    reinterpret_cast<uint8_t*>(pixelData)[n] = (uint8_t)data;
+                else
+                    reinterpret_cast<uint8_t*>(pixelData)[n] = (data * maxBitValue) / maxval;
                 n++;
             }
         } else {
@@ -96,7 +102,10 @@ Image * PNMFileHandler::load(const string& filename) {
             uint16_t data;
             while (file.read((char *)dataPtr, 2)) {
                 data = ((dataPtr[0]) << 8) | dataPtr[1];
-                reinterpret_cast<uint16_t*>(pixelData)[n] = (data * maxBitValue) / maxval;
+                if (maxval == 65535)
+                    reinterpret_cast<uint16_t*>(pixelData)[n] = (uint16_t)data;
+                else
+                    reinterpret_cast<uint16_t*>(pixelData)[n] = (data * maxBitValue) / maxval;
                 n++;
             }
         }
@@ -108,7 +117,7 @@ Image * PNMFileHandler::load(const string& filename) {
                 if (s.empty())
                     continue;
                 unsigned short val = stoi(s);
-                if (nChannels == 1) {
+                if (magic == "P1") {
                     val = val ? 0 : 1;
                 }
                 if (bitDepth == 8) {

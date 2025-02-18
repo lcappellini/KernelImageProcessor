@@ -20,3 +20,5 @@ set(SOURCE_FILES PixelImage.cpp
 add_executable(KernelImageProcessor main.cpp)
 add_library(core ${SOURCE_FILES})
 target_link_libraries(KernelImageProcessor core)
+
+

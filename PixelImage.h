@@ -63,14 +63,14 @@ template <uint8_t numChannels, uint8_t bits>
 uint16_t * PixelImage<numChannels, bits>::get_at_unsafe(int index) const {
     auto * pixel = new uint16_t[nChannels];
     for (int i = 0; i < nChannels; i++) {
-        pixel[i] = pixels[nChannels*index+i];
+        pixel[i] = (uint16_t)pixels[nChannels*index+i];
     }
     return pixel;
 }
 
 template <uint8_t numChannels, uint8_t bits>
 uint16_t * PixelImage<numChannels, bits>::get_at(int index) const {
-    if (index < 0 || index >= width*height*nChannels)
+    if (index < 0 || index >= width*height)
         throw out_of_range("Index out of bounds");
     return get_at_unsafe(index);
 }
