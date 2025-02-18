@@ -10,7 +10,8 @@ FetchContent_MakeAvailable(googletest)
 
 set(TEST_SOURCE_FILES runAllTests.cpp
         PNMImageHandlerFixture.cpp
-        KernelFixture.cpp)
+        KernelTest.cpp
+        ImageEditorFixture.cpp)
 add_executable(runKernelImageProcessorTests ${TEST_SOURCE_FILES})
 target_link_libraries(runKernelImageProcessorTests gtest gtest_main core)
 
