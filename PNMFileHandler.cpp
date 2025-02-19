@@ -130,14 +130,6 @@ Image * PNMFileHandler::load(const string& filename) {
         }
     }
 
-    cout << "File: " << filename << endl;
-    cout << "Magic: " << magic << endl;
-    cout << "Size: " << width << ", " << height << endl;
-    cout << "Maxval: " << maxval << endl;
-    cout << "Channels: " << (int)nChannels << endl;
-    cout << "BitDepth: " << (int)bitDepth << endl;
-    //cout << "n: " << n << endl;
-
     if (nChannels == 1){
         if (bitDepth == 8) {
             return new PixelImage<1, 8>(width, height, (uint8_t *)pixelData);
