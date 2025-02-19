@@ -25,7 +25,7 @@ protected:
     }
 
     static void TearDownTestSuite() {
-
+        //TODO DO I NEED TO DESTROY THE IMAGES (FREE THE MEMORY?)
     }
 };
 

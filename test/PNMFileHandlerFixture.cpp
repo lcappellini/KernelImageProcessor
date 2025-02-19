@@ -5,7 +5,7 @@
 
 using namespace std;
 
-class PNMImageHandlerSuite : public ::testing::Test {
+class PNMFileHandlerSuite : public ::testing::Test {
 protected:
     static string outputDir;
     static string dataDir;
@@ -19,17 +19,17 @@ protected:
     }
 };
 
-string PNMImageHandlerSuite::outputDir = "test/output/";
-string PNMImageHandlerSuite::dataDir = "test/data/";
+string PNMFileHandlerSuite::outputDir = "test/output/";
+string PNMFileHandlerSuite::dataDir = "test/data/";
 
 
-TEST_F(PNMImageHandlerSuite, TestFileNotFound) {
+TEST_F(PNMFileHandlerSuite, TestFileNotFound) {
     ASSERT_THROW({
         PNMFileHandler::load(dataDir + "notfound.ppm");
         }, runtime_error);
 }
 
-TEST_F(PNMImageHandlerSuite, TestP1) {
+TEST_F(PNMFileHandlerSuite, TestP1) {
     Image * img = PNMFileHandler::load(dataDir + "P1.pbm");
 
     ASSERT_NE(img, nullptr);
@@ -52,7 +52,7 @@ TEST_F(PNMImageHandlerSuite, TestP1) {
     //TODO SHOULD I TEST "SAVE" METHOD? P1/P4 IMAGES ARE LOADED AS P2/P5
 }
 
-TEST_F(PNMImageHandlerSuite, TestP4) {
+TEST_F(PNMFileHandlerSuite, TestP4) {
     Image * img = PNMFileHandler::load(dataDir + "P4.pbm");
 
     ASSERT_NE(img, nullptr);
@@ -78,7 +78,7 @@ TEST_F(PNMImageHandlerSuite, TestP4) {
     //TODO SHOULD I TEST "SAVE" METHOD? P1/P4 IMAGES ARE LOADED AS P2/P5
 }
 
-TEST_F(PNMImageHandlerSuite, TestP2_8) {
+TEST_F(PNMFileHandlerSuite, TestP2_8) {
     Image * img = PNMFileHandler::load(dataDir + "P2_8.pgm");
 
     ASSERT_NE(img, nullptr);
@@ -107,7 +107,7 @@ TEST_F(PNMImageHandlerSuite, TestP2_8) {
     ASSERT_TRUE(filesystem::exists(outputDir + "P2_8plain.pgm"));
 }
 
-TEST_F(PNMImageHandlerSuite, TestP2_16) {
+TEST_F(PNMFileHandlerSuite, TestP2_16) {
     Image * img = PNMFileHandler::load(dataDir + "P2_16.pgm");
 
     ASSERT_NE(img, nullptr);
@@ -136,7 +136,7 @@ TEST_F(PNMImageHandlerSuite, TestP2_16) {
     ASSERT_TRUE(filesystem::exists(outputDir + "P2_16plain.pgm"));
 }
 
-TEST_F(PNMImageHandlerSuite, TestP5_8) {
+TEST_F(PNMFileHandlerSuite, TestP5_8) {
     Image * img = PNMFileHandler::load(dataDir + "P5_8.pgm");
 
     ASSERT_NE(img, nullptr);
@@ -167,7 +167,7 @@ TEST_F(PNMImageHandlerSuite, TestP5_8) {
     //TODO RELOAD THE SAVED FILE TO CHECK IF CORRECT
 }
 
-TEST_F(PNMImageHandlerSuite, TestP5_16) {
+TEST_F(PNMFileHandlerSuite, TestP5_16) {
     Image * img = PNMFileHandler::load(dataDir + "P5_16.pgm");
 
     ASSERT_NE(img, nullptr);
@@ -196,7 +196,7 @@ TEST_F(PNMImageHandlerSuite, TestP5_16) {
     ASSERT_TRUE(filesystem::exists(outputDir + "P5_16plain.pgm"));
 }
 
-TEST_F(PNMImageHandlerSuite, TestP3_8) {
+TEST_F(PNMFileHandlerSuite, TestP3_8) {
     Image * img = PNMFileHandler::load(dataDir + "P3_8.ppm");
 
     ASSERT_NE(img, nullptr);
@@ -239,7 +239,7 @@ TEST_F(PNMImageHandlerSuite, TestP3_8) {
     ASSERT_TRUE(filesystem::exists(outputDir + "P3_8plain.ppm"));
 }
 
-TEST_F(PNMImageHandlerSuite, TestP3_16) {
+TEST_F(PNMFileHandlerSuite, TestP3_16) {
     Image * img = PNMFileHandler::load(dataDir + "P3_16.ppm");
 
     ASSERT_NE(img, nullptr);
@@ -282,7 +282,7 @@ TEST_F(PNMImageHandlerSuite, TestP3_16) {
     ASSERT_TRUE(filesystem::exists(outputDir + "P3_16plain.ppm"));
 }
 
-TEST_F(PNMImageHandlerSuite, TestP6_8) {
+TEST_F(PNMFileHandlerSuite, TestP6_8) {
     Image * img = PNMFileHandler::load(dataDir + "P6_8.ppm");
 
     ASSERT_NE(img, nullptr);
@@ -325,7 +325,7 @@ TEST_F(PNMImageHandlerSuite, TestP6_8) {
     ASSERT_TRUE(filesystem::exists(outputDir + "P6_8plain.ppm"));
 }
 
-TEST_F(PNMImageHandlerSuite, TestP6_16) {
+TEST_F(PNMFileHandlerSuite, TestP6_16) {
     Image * img = PNMFileHandler::load(dataDir + "P6_16.ppm");
 
     ASSERT_NE(img, nullptr);
