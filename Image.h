@@ -23,6 +23,7 @@ public:
     virtual uint16_t * get_at(int x, int y) const = 0;
     virtual void set_at(int index, uint16_t * values) = 0;
     virtual void set_at(int x, int y, uint16_t * values) = 0;
+    virtual ~Image() = default;
 };
 
 

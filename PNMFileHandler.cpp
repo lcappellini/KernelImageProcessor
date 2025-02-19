@@ -113,7 +113,7 @@ Image * PNMFileHandler::load(const string& filename) {
         while (getline(file, line)) {
             istringstream iss(line);
             string s;
-            while (getline(iss, s, ' ')) { //TODO verify if it works with multiple whitespaces
+            while (getline(iss, s, ' ')) {
                 if (s.empty())
                     continue;
                 unsigned short val = stoi(s);

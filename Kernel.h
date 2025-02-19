@@ -18,6 +18,7 @@ public:
     uint16_t get_size() const;
     float get_at(int index);
     float get_at(int x, int y);
+    ~Kernel();
 };
 
 

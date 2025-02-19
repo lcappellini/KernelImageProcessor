@@ -30,3 +30,7 @@ float Kernel::get_at(int x, int y) {
         throw out_of_range("Indexes out of bounds");
     return get_at(x+y*size);
 }
+
+Kernel::~Kernel() {
+    delete[] matrix;
+}

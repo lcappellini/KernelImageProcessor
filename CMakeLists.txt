@@ -5,7 +5,7 @@ set(CMAKE_CXX_STANDARD 11)
 
 add_subdirectory(test)
 
-set(SOURCE_FILES PixelImage.cpp
+set(SOURCE_FILES
         PixelImage.h
         PNMFileHandler.cpp
         PNMFileHandler.h

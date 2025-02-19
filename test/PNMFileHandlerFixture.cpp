@@ -38,18 +38,31 @@ TEST_F(PNMFileHandlerSuite, TestP1) {
     ASSERT_EQ(img->get_nChannels(), 1);
     ASSERT_EQ(img->get_bitDepth(), 8);
 
-    ASSERT_EQ(img->get_at(56, 89)[0], 0);
-    ASSERT_EQ(img->get_at(4725)[0], 0);
+    uint16_t * pixel;
+    pixel = img->get_at(56, 89);
+    ASSERT_EQ(pixel[0], 0);
+    delete[] pixel;
+    pixel = img->get_at(4725);
+    ASSERT_EQ(pixel[0], 0);
+    delete[] pixel;
 
     uint16_t value;
     value = 255;
     img->set_at(90, 12, &value);
-    ASSERT_EQ(img->get_at(10, 12)[0], 255);
+    pixel = img->get_at(10, 12);
+    ASSERT_EQ(pixel[0], 255);
+    delete[] pixel;
     value = 0;
     img->set_at(109, &value);
-    ASSERT_EQ(img->get_at(109)[0], 0);
+    pixel = img->get_at(109);
+    ASSERT_EQ(pixel[0], 0);
+    delete[] pixel;
 
-    //TODO SHOULD I TEST "SAVE" METHOD? P1/P4 IMAGES ARE LOADED AS P2/P5
+    ASSERT_EQ(PNMFileHandler::save(img, outputDir + "P1bytes.pgm"), 0);
+    ASSERT_TRUE(filesystem::exists(outputDir + "P1bytes.pgm"));
+    ASSERT_EQ(PNMFileHandler::save_plain(img, outputDir + "P1plain.pgm"), 0);
+    ASSERT_TRUE(filesystem::exists(outputDir + "P1plain.pgm"));
+    delete img;
 }
 
 TEST_F(PNMFileHandlerSuite, TestP4) {
@@ -64,18 +77,31 @@ TEST_F(PNMFileHandlerSuite, TestP4) {
     ASSERT_THROW({img->get_at(60, 110);}, out_of_range);
     ASSERT_THROW({img->get_at(10003);}, out_of_range);
 
-    ASSERT_EQ(img->get_at(50, 60)[0], 0);
-    ASSERT_EQ(img->get_at(6179)[0], 255);
+    uint16_t * pixel;
+    pixel = img->get_at(50, 60);
+    ASSERT_EQ(pixel[0], 0);
+    delete[] pixel;
+    pixel = img->get_at(6179);
+    ASSERT_EQ(pixel[0], 255);
+    delete[] pixel;
 
     uint16_t value;
     value = 255;
     img->set_at(88, 53, &value);
-    ASSERT_EQ(img->get_at(88, 53)[0], 255);
+    pixel = img->get_at(88, 53);
+    ASSERT_EQ(pixel[0], 255);
+    delete[] pixel;
     value = 0;
     img->set_at(2, &value);
-    ASSERT_EQ(img->get_at(2)[0], 0);
+    pixel = img->get_at(2);
+    ASSERT_EQ(pixel[0], 0);
+    delete[] pixel;
 
-    //TODO SHOULD I TEST "SAVE" METHOD? P1/P4 IMAGES ARE LOADED AS P2/P5
+    ASSERT_EQ(PNMFileHandler::save(img, outputDir + "P4bytes.pgm"), 0);
+    ASSERT_TRUE(filesystem::exists(outputDir + "P4bytes.pgm"));
+    ASSERT_EQ(PNMFileHandler::save_plain(img, outputDir + "P4plain.pgm"), 0);
+    ASSERT_TRUE(filesystem::exists(outputDir + "P4plain.pgm"));
+    delete img;
 }
 
 TEST_F(PNMFileHandlerSuite, TestP2_8) {
@@ -90,21 +116,31 @@ TEST_F(PNMFileHandlerSuite, TestP2_8) {
     ASSERT_THROW({img->get_at(60, 110);}, out_of_range);
     ASSERT_THROW({img->get_at(10003);}, out_of_range);
 
-    ASSERT_EQ(img->get_at(0, 0)[0], 131);
-    ASSERT_EQ(img->get_at(1)[0], 126);
+    uint16_t * pixel;
+    pixel = img->get_at(0, 0);
+    ASSERT_EQ(pixel[0], 131);
+    delete[] pixel;
+    pixel = img->get_at(1);
+    ASSERT_EQ(pixel[0], 126);
+    delete[] pixel;
 
     uint16_t value;
     value = 255;
     img->set_at(56, 93, &value);
-    ASSERT_EQ(img->get_at(56, 93)[0], 255);
+    pixel = img->get_at(56, 93);
+    ASSERT_EQ(pixel[0], 255);
+    delete[] pixel;
     value = 0;
     img->set_at(1452, &value);
-    ASSERT_EQ(img->get_at(1452)[0], 0);
+    pixel = img->get_at(1452);
+    ASSERT_EQ(pixel[0], 0);
+    delete[] pixel;
 
     ASSERT_EQ(PNMFileHandler::save(img, outputDir + "P2_8bytes.pgm"), 0);
     ASSERT_TRUE(filesystem::exists(outputDir + "P2_8bytes.pgm"));
     ASSERT_EQ(PNMFileHandler::save_plain(img, outputDir + "P2_8plain.pgm"), 0);
     ASSERT_TRUE(filesystem::exists(outputDir + "P2_8plain.pgm"));
+    delete img;
 }
 
 TEST_F(PNMFileHandlerSuite, TestP2_16) {
@@ -119,21 +155,31 @@ TEST_F(PNMFileHandlerSuite, TestP2_16) {
     ASSERT_THROW({img->get_at(501, 0);}, out_of_range);
     ASSERT_THROW({img->get_at(-1);}, out_of_range);
 
-    ASSERT_EQ(img->get_at(300, 200)[0], 13191);
-    ASSERT_EQ(img->get_at(1780)[0], 14438);
+    uint16_t * pixel;
+    pixel = img->get_at(300, 200);
+    ASSERT_EQ(pixel[0], 13191);
+    delete[] pixel;
+    pixel = img->get_at(1780);
+    ASSERT_EQ(pixel[0], 14438);
+    delete[] pixel;
 
     uint16_t value;
     value = 10000;
     img->set_at(120, 420, &value);
-    ASSERT_EQ(img->get_at(120, 420)[0], 10000);
+    pixel = img->get_at(120, 420);
+    ASSERT_EQ(pixel[0], 10000);
+    delete[] pixel;
     value = 0;
     img->set_at(13753, &value);
-    ASSERT_EQ(img->get_at(13753)[0], 0);
+    pixel = img->get_at(13753);
+    ASSERT_EQ(pixel[0], 0);
+    delete[] pixel;
 
     ASSERT_EQ(PNMFileHandler::save(img, outputDir + "P2_16bytes.pgm"), 0);
     ASSERT_TRUE(filesystem::exists(outputDir + "P2_16bytes.pgm"));
     ASSERT_EQ(PNMFileHandler::save_plain(img, outputDir + "P2_16plain.pgm"), 0);
     ASSERT_TRUE(filesystem::exists(outputDir + "P2_16plain.pgm"));
+    delete img;
 }
 
 TEST_F(PNMFileHandlerSuite, TestP5_8) {
@@ -148,23 +194,31 @@ TEST_F(PNMFileHandlerSuite, TestP5_8) {
     ASSERT_THROW({img->get_at(29, 100);}, out_of_range);
     ASSERT_THROW({img->get_at(-10);}, out_of_range);
 
-    ASSERT_EQ(img->get_at(67, 93)[0], 42);
-    ASSERT_EQ(img->get_at(4346)[0], 121);
+    uint16_t * pixel;
+    pixel = img->get_at(67, 93);
+    ASSERT_EQ(pixel[0], 42);
+    delete[] pixel;
+    pixel = img->get_at(4346);
+    ASSERT_EQ(pixel[0], 121);
+    delete[] pixel;
 
     uint16_t value;
     value = 187;
     img->set_at(76, 21, &value);
-    ASSERT_EQ(img->get_at(76, 21)[0], 187);
+    pixel = img->get_at(76, 21);
+    ASSERT_EQ(pixel[0], 187);
+    delete[] pixel;
     value = 10;
     img->set_at(487, &value);
-    ASSERT_EQ(img->get_at(487)[0], 10);
+    pixel = img->get_at(487);
+    ASSERT_EQ(pixel[0], 10);
+    delete[] pixel;
 
     ASSERT_EQ(PNMFileHandler::save(img, outputDir + "P5_8bytes.pgm"), 0);
     ASSERT_TRUE(filesystem::exists(outputDir + "P5_8bytes.pgm"));
     ASSERT_EQ(PNMFileHandler::save_plain(img, outputDir + "P5_8plain.pgm"), 0);
     ASSERT_TRUE(filesystem::exists(outputDir + "P5_8plain.pgm"));
-
-    //TODO RELOAD THE SAVED FILE TO CHECK IF CORRECT
+    delete img;
 }
 
 TEST_F(PNMFileHandlerSuite, TestP5_16) {
@@ -179,21 +233,31 @@ TEST_F(PNMFileHandlerSuite, TestP5_16) {
     ASSERT_THROW({img->get_at(509, 499);}, out_of_range);
     ASSERT_THROW({img->get_at(352323);}, out_of_range);
 
-    ASSERT_EQ(img->get_at(350, 162)[0], 7847);
-    ASSERT_EQ(img->get_at(34875)[0], 17674);
+    uint16_t * pixel;
+    pixel = img->get_at(350, 162);
+    ASSERT_EQ(pixel[0], 7847);
+    delete[] pixel;
+    pixel = img->get_at(34875);
+    ASSERT_EQ(pixel[0], 17674);
+    delete[] pixel;
 
     uint16_t value;
     value = 5632;
     img->set_at(30, 154, &value);
-    ASSERT_EQ(img->get_at(30, 154)[0], 5632);
+    pixel = img->get_at(30, 154);
+    ASSERT_EQ(pixel[0], 5632);
+    delete[] pixel;
     value = 3515;
     img->set_at(4124, &value);
-    ASSERT_EQ(img->get_at(4124)[0], 3515);
+    pixel = img->get_at(4124);
+    ASSERT_EQ(pixel[0], 3515);
+    delete[] pixel;
 
     ASSERT_EQ(PNMFileHandler::save(img, outputDir + "P5_16bytes.pgm"), 0);
     ASSERT_TRUE(filesystem::exists(outputDir + "P5_16bytes.pgm"));
     ASSERT_EQ(PNMFileHandler::save_plain(img, outputDir + "P5_16plain.pgm"), 0);
     ASSERT_TRUE(filesystem::exists(outputDir + "P5_16plain.pgm"));
+    delete img;
 }
 
 TEST_F(PNMFileHandlerSuite, TestP3_8) {
@@ -226,17 +290,20 @@ TEST_F(PNMFileHandlerSuite, TestP3_8) {
     for (int i = 0; i < 3; i++) {
         ASSERT_EQ(pixel[i], new_pixel1[i]);
     }
+    delete[] pixel;
     uint16_t new_pixel2[3] = {70, 128, 255};
     img->set_at(8343, new_pixel2);
     pixel = img->get_at(8343);
     for (int i = 0; i < 3; i++) {
         ASSERT_EQ(pixel[i], new_pixel2[i]);
     }
+    delete[] pixel;
 
     ASSERT_EQ(PNMFileHandler::save(img, outputDir + "P3_8bytes.ppm"), 0);
     ASSERT_TRUE(filesystem::exists(outputDir + "P3_8bytes.ppm"));
     ASSERT_EQ(PNMFileHandler::save_plain(img, outputDir + "P3_8plain.ppm"), 0);
     ASSERT_TRUE(filesystem::exists(outputDir + "P3_8plain.ppm"));
+    delete img;
 }
 
 TEST_F(PNMFileHandlerSuite, TestP3_16) {
@@ -269,17 +336,20 @@ TEST_F(PNMFileHandlerSuite, TestP3_16) {
     for (int i = 0; i < 3; i++) {
         ASSERT_EQ(pixel[i], new_pixel1[i]);
     }
+    delete[] pixel;
     uint16_t new_pixel2[3] = {0, 65535, 12800};
     img->set_at(43236, new_pixel2);
     pixel = img->get_at(43236);
     for (int i = 0; i < 3; i++) {
         ASSERT_EQ(pixel[i], new_pixel2[i]);
     }
+    delete[] pixel;
 
     ASSERT_EQ(PNMFileHandler::save(img, outputDir + "P3_16bytes.ppm"), 0);
     ASSERT_TRUE(filesystem::exists(outputDir + "P3_16bytes.ppm"));
     ASSERT_EQ(PNMFileHandler::save_plain(img, outputDir + "P3_16plain.ppm"), 0);
     ASSERT_TRUE(filesystem::exists(outputDir + "P3_16plain.ppm"));
+    delete img;
 }
 
 TEST_F(PNMFileHandlerSuite, TestP6_8) {
@@ -312,17 +382,20 @@ TEST_F(PNMFileHandlerSuite, TestP6_8) {
     for (int i = 0; i < 3; i++) {
         ASSERT_EQ(pixel[i], new_pixel1[i]);
     }
+    delete[] pixel;
     uint16_t new_pixel2[3] = {43, 31, 0};
     img->set_at(7888, new_pixel2);
     pixel = img->get_at(7888);
     for (int i = 0; i < 3; i++) {
         ASSERT_EQ(pixel[i], new_pixel2[i]);
     }
+    delete[] pixel;
 
     ASSERT_EQ(PNMFileHandler::save(img, outputDir + "P6_8bytes.ppm"), 0);
     ASSERT_TRUE(filesystem::exists(outputDir + "P6_8bytes.ppm"));
     ASSERT_EQ(PNMFileHandler::save_plain(img, outputDir + "P6_8plain.ppm"), 0);
     ASSERT_TRUE(filesystem::exists(outputDir + "P6_8plain.ppm"));
+    delete img;
 }
 
 TEST_F(PNMFileHandlerSuite, TestP6_16) {
@@ -355,15 +428,18 @@ TEST_F(PNMFileHandlerSuite, TestP6_16) {
     for (int i = 0; i < 3; i++) {
         ASSERT_EQ(pixel[i], new_pixel1[i]);
     }
+    delete[] pixel;
     uint16_t new_pixel2[3] = {255, 678, 44444};
     img->set_at(8932, new_pixel2);
     pixel = img->get_at(8932);
     for (int i = 0; i < 3; i++) {
         ASSERT_EQ(pixel[i], new_pixel2[i]);
     }
+    delete[] pixel;
 
     ASSERT_EQ(PNMFileHandler::save(img, outputDir + "P6_16bytes.ppm"), 0);
     ASSERT_TRUE(filesystem::exists(outputDir + "P6_16bytes.ppm"));
     ASSERT_EQ(PNMFileHandler::save_plain(img, outputDir + "P6_16plain.ppm"), 0);
     ASSERT_TRUE(filesystem::exists(outputDir + "P6_16plain.ppm"));
+    delete img;
 }

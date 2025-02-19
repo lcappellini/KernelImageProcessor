@@ -27,6 +27,7 @@ public:
     uint16_t * get_at(int x, int y) const override;
     void set_at(int index, uint16_t * values) override;
     void set_at(int x, int y, uint16_t * values) override;
+    ~PixelImage() override;
 };
 
 template <uint8_t numChannels, uint8_t bits>
@@ -81,6 +82,11 @@ uint16_t * PixelImage<numChannels, bits>::get_at(int x, int y) const {
         throw out_of_range("Indexes out of bounds");
     }
     return get_at_unsafe(x+y*width);
+}
+
+template <uint8_t numChannels, uint8_t bits>
+PixelImage<numChannels, bits>::~PixelImage() {
+    delete[] pixels;
 }
 
 

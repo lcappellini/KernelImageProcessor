@@ -6,7 +6,7 @@
 using namespace std;
 
 TEST(Kernel, KernelConstructor) {
-    float matrix[9] = {1.1, 6.0, -2.8, 0, 8.1, -3.3, 0.6, 0.9, -5.2};
+    float * matrix = new float[9]{1.1, 6.0, -2.8, 0, 8.1, -3.3, 0.6, 0.9, -5.2};
     Kernel * ker = new Kernel(3, matrix);
 
     ASSERT_EQ(ker->get_size(), 3);
@@ -19,4 +19,5 @@ TEST(Kernel, KernelConstructor) {
             ASSERT_EQ(matrix[x+y*3], ker->get_at(x, y));
         }
     }
+    delete ker;
 }
