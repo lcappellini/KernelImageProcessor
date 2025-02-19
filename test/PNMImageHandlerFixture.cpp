@@ -14,12 +14,6 @@ protected:
         filesystem::create_directories(outputDir);
     }
 
-    void SetUp() override {
-    }
-
-    void TearDown() override {
-    }
-
     static void TearDownTestSuite() {
         filesystem::remove_all(outputDir);
     }
@@ -373,12 +367,3 @@ TEST_F(PNMImageHandlerSuite, TestP6_16) {
     ASSERT_EQ(PNMFileHandler::save_plain(img, outputDir + "P6_16plain.ppm"), 0);
     ASSERT_TRUE(filesystem::exists(outputDir + "P6_16plain.ppm"));
 }
-
-/*
- X load di file inesistente
- X load di file di ogni tipo (P1, P2, P3, P4, P5, P6) con 2 bitdepth diverse [12]
- X save di file di ogni tipo (P1, P2, P3, P4, P5, P6) con 2 bitdepth diverse [12]
- - Applica ogni effetto dell'editor a un'immagine a 8 e 16 bitdepth, a 1 e 3 canali
- X costructor di kernel
- X get_at e set_at di immagini a 8 e 16 bitdepth, a 1 e 3 canali
-*/
