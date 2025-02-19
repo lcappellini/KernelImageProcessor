@@ -310,6 +310,20 @@ Image * ImageEditor::gaussian_blur3(Image * image){
     return resImage;
 }
 
+Image * ImageEditor::edge_detection_effect(Image * image){
+    Kernel * ker = new Kernel(3, new float[9]{-1, -1, -1, -1, 8, -1, -1, -1, -1});
+    Image * resImage = ImageEditor::convolve(image, ker, KernelMode::Mirror); //Mirror should be the best for edge detection
+    return resImage;
+}
+
+
+Image * ImageEditor::emboss(Image * image){
+    Kernel * ker = new Kernel(3, new float[9]{-2, -1, 0, -1, 1, 1, 0, 1, 2});
+    Image * resImage = ImageEditor::convolve(image, ker, KernelMode::Extend); //Extend should be the best for embossing
+    return resImage;
+}
+
+
 Image * ImageEditor::invert(Image *image) {
     uint8_t chs = image->get_nChannels();
     uint16_t w = image->get_width();

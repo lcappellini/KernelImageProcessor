@@ -10,6 +10,8 @@
 enum class ImageEffect {
     Sharpen,
     GaussianBlur,
+    EdgeDetection,
+    Emboss,
     BrightnessChange,
     Crop,
     Inversion,
@@ -21,17 +23,22 @@ using namespace std;
 void show_help() {
     cout << "Kernel Image Processor by Lorenzo Cappellini\n";
     cout << "Supported image formats: .pbm, .pgm, .ppm\n";
-    cout << "Supported bit depth values: 8, 16\n\n";
-    cout << "Available Arguments:\n";
+    cout << "Supported bit depth values: 8, 16\n";
+    cout << "\nMain Arguments:\n";
     cout << "-i <input_file>         : Specify input file path\n";
     cout << "-o <output_file>        : Specify output file path (encoded as bytes)\n";
     cout << "-op <output_file>       : Specify output file path (encoded as plain ascii)\n";
+    cout << "\nConvolution effects:\n";
     cout << "-sharpen                : Apply sharpening effect\n";
     cout << "-blur                   : Apply Gaussian blur effect\n";
+    cout << "-edge                   : Apply \"edge detection\" effect\n";
+    cout << "-emboss                 : Apply embossing effect\n";
+    cout << "\nOther effects:\n";
     cout << "-brightness <factor>    : Change brightness by the given factor\n";
     cout << "-crop <coordinates>     : Crop the image with comma-separated coordinates for the vertices: \"x0,y0,x1,y1\"\n";
     cout << "-invert                 : Invert the colors of the image\n";
     cout << "-grayscale              : Convert the image to grayscale\n";
+    cout << "\nOther commands:\n";
     cout << "-v                      : Enable verbose output for debugging information\n";
     cout << "-h                      : Show this help message\n";
 }
@@ -93,6 +100,20 @@ int main(int argc, char *argv[]) {
                 log_error("You can specify only 1 effect argument");
             }
             imageEffect = ImageEffect::GaussianBlur;
+            imageEffectProvided = true;
+
+        } else if (arg == "-edge") {
+            if (imageEffectProvided) {
+                log_error("You can specify only 1 effect argument");
+            }
+            imageEffect = ImageEffect::EdgeDetection;
+            imageEffectProvided = true;
+
+        } else if (arg == "-emboss") {
+            if (imageEffectProvided) {
+                log_error("You can specify only 1 effect argument");
+            }
+            imageEffect = ImageEffect::Emboss;
             imageEffectProvided = true;
 
         } else if (arg == "-brightness") {
@@ -210,6 +231,20 @@ int main(int argc, char *argv[]) {
                     cout << "Applying Gaussian blur...";
                 }
                 new_img = ImageEditor::gaussian_blur3(img);
+                break;
+            }
+            case ImageEffect::EdgeDetection: {
+                if (verbose) {
+                    cout << "Applying \"edge detection\" effect...";
+                }
+                new_img = ImageEditor::edge_detection_effect(img);
+                break;
+            }
+            case ImageEffect::Emboss: {
+                if (verbose) {
+                    cout << "Applying embossing...";
+                }
+                new_img = ImageEditor::emboss(img);
                 break;
             }
             case ImageEffect::BrightnessChange: {
