@@ -10,16 +10,11 @@
 
 using namespace std;
 
-class PNMFileHandler {
-private:
-    static const string validExtensions[3];
-    static bool hasValidExtension(const string& filename);
-public:
-    static string defaultComment;
-    static Image * load(const string& filename);
-    static int save(Image * image, const string& filename, const string& comments=defaultComment);
+namespace PNMFileHandler {
+    bool hasValidExtension(const string& filename);
 
-    static int save_plain(Image *image, const string &filename, const string& comments=defaultComment);
+    Image * load(const string& filename);
+    int save(Image * image, const string& filename, bool plain=false, const string& comments="Made with KernelImageProcessor");
 };
 
 #endif //KERNELIMAGEPROCESSOR_PNMFILEHANDLER_H

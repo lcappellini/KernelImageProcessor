@@ -60,7 +60,7 @@ TEST_F(PNMFileHandlerSuite, TestP1) {
 
     ASSERT_EQ(PNMFileHandler::save(img, outputDir + "P1bytes.pgm"), 0);
     ASSERT_TRUE(filesystem::exists(outputDir + "P1bytes.pgm"));
-    ASSERT_EQ(PNMFileHandler::save_plain(img, outputDir + "P1plain.pgm"), 0);
+    ASSERT_EQ(PNMFileHandler::save(img, outputDir + "P1plain.pgm", true), 0);
     ASSERT_TRUE(filesystem::exists(outputDir + "P1plain.pgm"));
     delete img;
 }
@@ -99,7 +99,7 @@ TEST_F(PNMFileHandlerSuite, TestP4) {
 
     ASSERT_EQ(PNMFileHandler::save(img, outputDir + "P4bytes.pgm"), 0);
     ASSERT_TRUE(filesystem::exists(outputDir + "P4bytes.pgm"));
-    ASSERT_EQ(PNMFileHandler::save_plain(img, outputDir + "P4plain.pgm"), 0);
+    ASSERT_EQ(PNMFileHandler::save(img, outputDir + "P4plain.pgm", true), 0);
     ASSERT_TRUE(filesystem::exists(outputDir + "P4plain.pgm"));
     delete img;
 }
@@ -138,7 +138,7 @@ TEST_F(PNMFileHandlerSuite, TestP2_8) {
 
     ASSERT_EQ(PNMFileHandler::save(img, outputDir + "P2_8bytes.pgm"), 0);
     ASSERT_TRUE(filesystem::exists(outputDir + "P2_8bytes.pgm"));
-    ASSERT_EQ(PNMFileHandler::save_plain(img, outputDir + "P2_8plain.pgm"), 0);
+    ASSERT_EQ(PNMFileHandler::save(img, outputDir + "P2_8plain.pgm", true), 0);
     ASSERT_TRUE(filesystem::exists(outputDir + "P2_8plain.pgm"));
     delete img;
 }
@@ -177,7 +177,7 @@ TEST_F(PNMFileHandlerSuite, TestP2_16) {
 
     ASSERT_EQ(PNMFileHandler::save(img, outputDir + "P2_16bytes.pgm"), 0);
     ASSERT_TRUE(filesystem::exists(outputDir + "P2_16bytes.pgm"));
-    ASSERT_EQ(PNMFileHandler::save_plain(img, outputDir + "P2_16plain.pgm"), 0);
+    ASSERT_EQ(PNMFileHandler::save(img, outputDir + "P2_16plain.pgm", true), 0);
     ASSERT_TRUE(filesystem::exists(outputDir + "P2_16plain.pgm"));
     delete img;
 }
@@ -216,7 +216,7 @@ TEST_F(PNMFileHandlerSuite, TestP5_8) {
 
     ASSERT_EQ(PNMFileHandler::save(img, outputDir + "P5_8bytes.pgm"), 0);
     ASSERT_TRUE(filesystem::exists(outputDir + "P5_8bytes.pgm"));
-    ASSERT_EQ(PNMFileHandler::save_plain(img, outputDir + "P5_8plain.pgm"), 0);
+    ASSERT_EQ(PNMFileHandler::save(img, outputDir + "P5_8plain.pgm", true), 0);
     ASSERT_TRUE(filesystem::exists(outputDir + "P5_8plain.pgm"));
     delete img;
 }
@@ -255,7 +255,7 @@ TEST_F(PNMFileHandlerSuite, TestP5_16) {
 
     ASSERT_EQ(PNMFileHandler::save(img, outputDir + "P5_16bytes.pgm"), 0);
     ASSERT_TRUE(filesystem::exists(outputDir + "P5_16bytes.pgm"));
-    ASSERT_EQ(PNMFileHandler::save_plain(img, outputDir + "P5_16plain.pgm"), 0);
+    ASSERT_EQ(PNMFileHandler::save(img, outputDir + "P5_16plain.pgm", true), 0);
     ASSERT_TRUE(filesystem::exists(outputDir + "P5_16plain.pgm"));
     delete img;
 }
@@ -301,7 +301,7 @@ TEST_F(PNMFileHandlerSuite, TestP3_8) {
 
     ASSERT_EQ(PNMFileHandler::save(img, outputDir + "P3_8bytes.ppm"), 0);
     ASSERT_TRUE(filesystem::exists(outputDir + "P3_8bytes.ppm"));
-    ASSERT_EQ(PNMFileHandler::save_plain(img, outputDir + "P3_8plain.ppm"), 0);
+    ASSERT_EQ(PNMFileHandler::save(img, outputDir + "P3_8plain.ppm", true), 0);
     ASSERT_TRUE(filesystem::exists(outputDir + "P3_8plain.ppm"));
     delete img;
 }
@@ -347,7 +347,7 @@ TEST_F(PNMFileHandlerSuite, TestP3_16) {
 
     ASSERT_EQ(PNMFileHandler::save(img, outputDir + "P3_16bytes.ppm"), 0);
     ASSERT_TRUE(filesystem::exists(outputDir + "P3_16bytes.ppm"));
-    ASSERT_EQ(PNMFileHandler::save_plain(img, outputDir + "P3_16plain.ppm"), 0);
+    ASSERT_EQ(PNMFileHandler::save(img, outputDir + "P3_16plain.ppm", true), 0);
     ASSERT_TRUE(filesystem::exists(outputDir + "P3_16plain.ppm"));
     delete img;
 }
@@ -393,7 +393,7 @@ TEST_F(PNMFileHandlerSuite, TestP6_8) {
 
     ASSERT_EQ(PNMFileHandler::save(img, outputDir + "P6_8bytes.ppm"), 0);
     ASSERT_TRUE(filesystem::exists(outputDir + "P6_8bytes.ppm"));
-    ASSERT_EQ(PNMFileHandler::save_plain(img, outputDir + "P6_8plain.ppm"), 0);
+    ASSERT_EQ(PNMFileHandler::save(img, outputDir + "P6_8plain.ppm", true), 0);
     ASSERT_TRUE(filesystem::exists(outputDir + "P6_8plain.ppm"));
     delete img;
 }
@@ -439,7 +439,7 @@ TEST_F(PNMFileHandlerSuite, TestP6_16) {
 
     ASSERT_EQ(PNMFileHandler::save(img, outputDir + "P6_16bytes.ppm"), 0);
     ASSERT_TRUE(filesystem::exists(outputDir + "P6_16bytes.ppm"));
-    ASSERT_EQ(PNMFileHandler::save_plain(img, outputDir + "P6_16plain.ppm"), 0);
+    ASSERT_EQ(PNMFileHandler::save(img, outputDir + "P6_16plain.ppm", true), 0);
     ASSERT_TRUE(filesystem::exists(outputDir + "P6_16plain.ppm"));
     delete img;
 }

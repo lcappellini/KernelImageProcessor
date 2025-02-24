@@ -5,14 +5,10 @@
 #include <fstream>
 #include <sstream>
 #include <vector>
-#include <iostream>
 #include "PNMFileHandler.h"
 #include "PixelImage.h"
 
 using namespace std;
-
-string PNMFileHandler::defaultComment = "Made with KernelImageProcessor";
-const string PNMFileHandler::validExtensions[3] = {"ppm", "pgm", "pbm"};
 
 Image * PNMFileHandler::load(const string& filename) {
     if (!hasValidExtension(filename)) {
@@ -146,54 +142,36 @@ Image * PNMFileHandler::load(const string& filename) {
     return nullptr;
 }
 
-int PNMFileHandler::save_plain(Image * image, const string& filename, const string& comments) {
-    ofstream outfile;
-    outfile.open(filename, ios_base::trunc);
-
-    uint8_t magic;
-    if (image->get_nChannels() == 1){
-        magic = 2;
-    } else {
-        magic = 3;
-    }
-
-    outfile << "P" << (int)magic << endl;
-
-    stringstream commentsStream(comments);
-    string line;
-    while (getline(commentsStream, line)) {
-        outfile << "# " << line << endl;
-    }
-
-    outfile << image->get_width() << " " << image->get_height() << endl;
-
-    uint16_t maxval = (uint16_t)(pow(2, image->get_bitDepth())-1);
-    outfile << maxval << endl;
-
-    uint8_t chs = image->get_nChannels();
-    for (int i = 0; i < image->get_width()*image->get_height(); i++){
-        uint16_t * pixel = image->get_at(i);
-        for (int n = 0; n < chs; n++){
-            if (n != 0){
-                outfile << " ";
-            }
-            outfile << (int)pixel[n];
+bool PNMFileHandler::hasValidExtension(const string &filename) {
+    string ext = filename.substr(filename.find_last_of('.') + 1);
+    for (const auto & validExt : {"ppm", "pgm", "pbm"}) {
+        if (ext == validExt) {
+            return true;
         }
-        outfile << endl;
     }
-    outfile.close();
-    return 0;
+    return false;
 }
 
-int PNMFileHandler::save(Image * image, const string& filename, const string& comments) {
+int PNMFileHandler::save(Image *image, const string &filename, bool plain, const string &comments) {
     ofstream outfile;
-    outfile.open(filename, ios_base::trunc | ios_base::binary);
+    if (plain)
+        outfile.open(filename, ios_base::trunc);
+    else
+        outfile.open(filename, ios_base::trunc | ios_base::binary);
 
     uint8_t magic;
-    if (image->get_nChannels() == 1){
-        magic = 5;
+    if (plain) {
+        if (image->get_nChannels() == 1){
+            magic = 2;
+        } else {
+            magic = 3;
+        }
     } else {
-        magic = 6;
+        if (image->get_nChannels() == 1) {
+            magic = 5;
+        } else {
+            magic = 6;
+        }
     }
 
     outfile << "P" << (int)magic << std::endl;
@@ -210,32 +188,35 @@ int PNMFileHandler::save(Image * image, const string& filename, const string& co
     outfile << maxval << endl;
 
     uint8_t bitDepth = image->get_bitDepth();
-    for (int i = 0; i < image->get_width() * image->get_height(); i++) {
-        uint16_t *pixel = image->get_at(i);
-        if (bitDepth == 8) {
-            for (int j = 0; j < image->get_nChannels(); j++) {
-                //outfile.write((char*)((uint8_t*)&pixel[j]), 1);
-                outfile.put((char)pixel[j]);
+    uint8_t chs = image->get_nChannels();
+    if (plain) {
+        for (int i = 0; i < image->get_width() * image->get_height(); i++){
+            uint16_t * pixel = image->get_at(i);
+            for (int n = 0; n < chs; n++){
+                if (n != 0){
+                    outfile << " ";
+                }
+                outfile << (int)pixel[n];
             }
-        } else {
-            for (int j = 0; j < image->get_nChannels(); j++) {
-                uint16_t value = pixel[j];
-                outfile.put((char)((value >> 8) & 0xFF));
-                outfile.put((char)(value & 0xFF));
+            outfile << endl;
+        }
+    } else {
+        for (int i = 0; i < image->get_width() * image->get_height(); i++) {
+            uint16_t *pixel = image->get_at(i);
+            if (bitDepth == 8) {
+                for (int j = 0; j < chs; j++) {
+                    outfile.put((char) pixel[j]);
+                }
+            } else {
+                for (int j = 0; j < chs; j++) {
+                    uint16_t value = pixel[j];
+                    outfile.put((char) ((value >> 8) & 0xFF));
+                    outfile.put((char) (value & 0xFF));
+                }
             }
         }
     }
     outfile.close();
     return 0;
-}
-
-bool PNMFileHandler::hasValidExtension(const string &filename) {
-    string ext = filename.substr(filename.find_last_of('.') + 1);
-    for (const auto & validExt : validExtensions) {
-        if (ext == validExt) {
-            return true;
-        }
-    }
-    return false;
 }
 

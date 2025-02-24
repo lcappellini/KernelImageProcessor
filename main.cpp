@@ -289,11 +289,7 @@ int main(int argc, char *argv[]) {
 
     int result;
     try {
-        if (outputPlain) {
-            result = PNMFileHandler::save_plain(new_img, outputFile);
-        } else {
-            result = PNMFileHandler::save(new_img, outputFile);
-        }
+        result = PNMFileHandler::save(new_img, outputFile, outputPlain);
     } catch (const std::exception& e) {
         log_error(e.what());
         exit(1);
