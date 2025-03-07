@@ -50,37 +50,37 @@ KernelImageProcessor.exe -i "original.ppm" -sharpen -o "sharpen.ppm"
 
 ### Edge detection effect
 ```bash
-KernelImageProcessor.exe -i "original.ppm" -edge -o "sharpen.ppm"
+KernelImageProcessor.exe -i "gaussianblur.ppm" -edge -o "edgedetection.ppm"
 ```
 ![edgedetection](examples/edgedetection.png)
 
 ### Embossing
 ```bash
-KernelImageProcessor.exe -i "original.ppm" -emboss -o "sharpen.ppm"
+KernelImageProcessor.exe -i "original.ppm" -emboss -o "emboss.ppm"
 ```
 ![emboss](examples/emboss.png)
 
 ### Gaussian Blur
 ```bash
-KernelImageProcessor.exe -i "original.ppm" -blur -o "sharpen.ppm"
+KernelImageProcessor.exe -i "original.ppm" -blur -o "gaussianblur.ppm"
 ```
 ![gaussianblur](examples/gaussianblur.png)
 
 ### Grayscale
 ```bash
-KernelImageProcessor.exe -i "original.ppm" -grayscale -o "sharpen.pgm"
+KernelImageProcessor.exe -i "original.ppm" -grayscale -o "grayscale.pgm"
 ```
 ![grayscale](examples/grayscale.png)
 
 ### Color inversion
 ```bash
-KernelImageProcessor.exe -i "original.ppm" -invert -o "sharpen.ppm"
+KernelImageProcessor.exe -i "original.ppm" -invert -o "inversion.ppm"
 ```
 ![inversion](examples/inversion.png)
 
 ### Changing brightness
 ```bash
-KernelImageProcessor.exe -i "original.ppm" -brightness 1.3 -o "sharpen.ppm"
+KernelImageProcessor.exe -i "original.ppm" -brightness 1.3 -o "brightness.ppm"
 ```
 ![brightness](examples/brightness.png)
 
